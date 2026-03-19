@@ -1,16 +1,28 @@
 <template>
   <div class="portfolio-wrapper">
 
-    <!-- Controle de Áudio -->
-    <button class="audio-toggle" @click="toggleAudio">
-      <svg v-if="!isAudioPlaying" class="audio-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
-      </svg>
-      <svg v-else class="audio-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-         <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
-      </svg>
-      {{ isAudioPlaying ? 'Música: ON' : 'Música: OFF' }}
-    </button>
+    <!-- Header / Navbar Principal -->
+    <header class="main-header">
+      <div class="header-container">
+        <div class="logo-wrapper">
+          <img src="/logo.png" alt="CezinhaSilva Logo" class="main-logo" />
+          <span class="logo-slogan">Intelligent Automation & Web Solutions</span>
+        </div>
+        
+        <nav class="main-nav">
+          <!-- Controle de Áudio Integrado -->
+          <button class="audio-toggle-compact" @click="toggleAudio">
+            <svg v-if="!isAudioPlaying" class="audio-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+            </svg>
+            <svg v-else class="audio-icon" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+               <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+            </svg>
+            <span class="audio-status">{{ isAudioPlaying ? 'ON' : 'OFF' }}</span>
+          </button>
+        </nav>
+      </div>
+    </header>
     <audio ref="bgAudio" loop preload="auto">
       <source src="https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3" type="audio/mpeg" />
     </audio>
@@ -227,38 +239,87 @@ onUnmounted(() => {
   background-color: #0b0d11;
 }
 
-/* AUDIO TOGGLE */
-.audio-toggle {
+/* HEADER & LOGO */
+.main-header {
   position: fixed;
-  top: 30px;
-  right: 40px;
-  z-index: 50;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 0;
+  background: rgba(11, 13, 17, 0.7);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.logo-wrapper {
+  height: 45px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  gap: 15px;
+}
+
+.main-logo {
+  height: 100%;
+  width: auto;
+  filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.logo-slogan {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left: 15px;
+  display: inline-block;
+}
+
+@media (max-width: 992px) {
+  .logo-slogan { display: none; }
+}
+
+.main-logo:hover {
+  transform: scale(1.05);
+}
+
+.audio-toggle-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
-  padding: 10px 20px;
+  color: #fff;
+  padding: 8px 15px;
   border-radius: 50px;
   cursor: pointer;
   font-family: 'Space Grotesk', sans-serif;
   transition: all 0.3s ease;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
 }
 
-.audio-toggle:hover {
-  background: rgba(6, 182, 212, 0.2);
-  color: #0bdcfe;
-  border-color: rgba(6, 182, 212, 0.5);
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+.audio-toggle-compact:hover {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #06b6d4;
 }
 
 .audio-icon {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 }
 
 /* HERO */
