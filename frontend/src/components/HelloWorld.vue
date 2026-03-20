@@ -89,10 +89,12 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Importação local dos vídeos para performance e autonomia
 import videoCode from '../assets/video_code.mp4';
 import videoTech from '../assets/video_tech.mp4';
 import videoGlobal from '../assets/video_global.mp4';
+import backendServiceImg from '../assets/backend_service.png';
+import n8nServiceImg from '../assets/n8n_service.png';
+import wpServiceImg from '../assets/wp_service.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -127,22 +129,22 @@ const openWhatsApp = () => {
   window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
 };
 
-// Serviços com Imagens Atuais Adicionadas
+// Serviços com Imagens Premium Customizadas
 const services = ref([
   {
     title: 'CodeIgniter & Node.js',
     desc: 'Soluções backend robustas, rápidas e nativamente otimizadas para impulsionar e escalar os negócios da sua empresa em ambientes on-premise ou na nuvem.',
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80'
+    image: backendServiceImg
   },
   {
     title: 'Automação com n8n',
     desc: 'Integrações em tempo real e workflows automatizados. Elimine atividades operacionais repetitivas e libere o tempo vital para pensar em estratégia de longo prazo.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80'
+    image: n8nServiceImg
   },
   {
     title: 'WordPress Personalizado',
     desc: 'Criação de sites dinâmicos, e-commerces (WooCommerce) e páginas institucionais escaláveis. Otimizados para SEO (Google), alta velocidade de carregamento e gestão intuitiva para sua equipe.',
-    image: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=600&q=80'
+    image: wpServiceImg
   }
 ]);
 
