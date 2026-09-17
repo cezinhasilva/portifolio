@@ -35,12 +35,18 @@ backend/build/
 docker/logs/
 docker/mysql-data/
 
-# CI4 specific
-ci4/writable/*
-!ci4/writable/index.html
-!ci4/writable/.htaccess
+# CI4 Monolith
+/vendor/
+/writable/*
+!/writable/index.html
+!/writable/.htaccess
 
-# WordPress specific (optional)
-wordpress/wp-content/uploads/
-wordpress/wp-config.php
-!wordpress/wp-config-sample.php
+# Legacy Archive
+_legacy_archive/
+
+# Antigravity & Agent artifacts
+.agent/
+.agents/
+skills-lock.json
+
+
