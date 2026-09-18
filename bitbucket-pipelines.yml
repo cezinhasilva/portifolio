@@ -2,7 +2,7 @@ image: google/cloud-sdk:latest
 
 pipelines:
   branches:
-    master:
+    main:
       - step:
           name: Build, Push and Deploy to GCP Cloud Run
           oidc: true  # Ativa o Workload Identity (OpenID Connect)
