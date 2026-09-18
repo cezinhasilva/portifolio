@@ -32,8 +32,4 @@ pipelines:
             
             # 4. Deploy no Cloud Run (Zero Downtime)
             - echo "Fazendo Deploy no Cloud Run..."
-            - gcloud run deploy cezinhasilva-app
-                --image $IMAGE_NAME
-                --region $GCP_REGION
-                --allow-unauthenticated
-                --port 80
+            - gcloud run deploy cezinhasilva-app --image $IMAGE_NAME --region $GCP_REGION --project $GCP_PROJECT_ID --allow-unauthenticated --port 80
