@@ -1,0 +1,39 @@
+image: google/cloud-sdk:latest
+
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Build, Push and Deploy to GCP Cloud Run
+          oidc: true  # Ativa o Workload Identity (OpenID Connect)
+          services:
+            - docker
+          script:
+            - export IMAGE_NAME=${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${GCP_REPO_NAME}/cezinhasilva:${BITBUCKET_COMMIT}
+            
+            # 1. Autenticação OIDC (Sem chave JSON)
+            - echo "Autenticando no Google Cloud via Workload Identity Federation..."
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > /tmp/oidc_token
+            - gcloud iam workload-identity-pools create-cred-config
+                projects/${GCP_PROJECT_NUMBER}/locations/global/workloadIdentityPools/${WIF_POOL}/providers/${WIF_PROVIDER}
+                --service-account=${GCP_SERVICE_ACCOUNT}
+                --output-file=/tmp/sts-creds.json
+                --credential-source-file=/tmp/oidc_token
+            - gcloud auth login --cred-file=/tmp/sts-creds.json
+            
+            # 2. Configuração do Docker para Artifact Registry
+            - echo "Configurando Docker Auth..."
+            - gcloud auth configure-docker ${GCP_REGION}-docker.pkg.dev --quiet
+            
+            # 3. Build & Push da Imagem Docker
+            - echo "Iniciando Build da Imagem..."
+            - docker build -t $IMAGE_NAME .
+            - docker push $IMAGE_NAME
+            
+            # 4. Deploy no Cloud Run (Zero Downtime)
+            - echo "Fazendo Deploy no Cloud Run..."
+            - gcloud run deploy cezinhasilva-app
+                --image $IMAGE_NAME
+                --region $GCP_REGION
+                --allow-unauthenticated
+                --port 80
