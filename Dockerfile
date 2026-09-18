@@ -35,6 +35,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Diretório de trabalho
 WORKDIR /var/www/html
 
+# Copia o código fonte do projeto
+COPY . /var/www/html
+
+# Instala as dependências PHP (ignorando as de dev para produção)
+RUN composer install --no-dev --optimize-autoloader
+
 # Permissões www-data
 RUN chown -R www-data:www-data /var/www/html
 
