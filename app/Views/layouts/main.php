@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?= $title ?? 'Cezinha Silva — Diretor de Tecnologia, Arquiteto & Dev Full Stack' ?></title>
     <meta name="description" content="Engenharia de Software de Alta Performance, Monólitos Modernos, Automações Inteligentes e IA Generativa com Vertex AI." />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
