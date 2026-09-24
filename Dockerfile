@@ -41,7 +41,9 @@ COPY . /var/www/html
 # Instala as dependências PHP (ignorando as de dev para produção)
 RUN composer install --no-dev --optimize-autoloader
 
-# Permissões www-data
-RUN chown -R www-data:www-data /var/www/html
+# Cria diretórios essenciais e ajusta permissões
+RUN mkdir -p writable/cache writable/logs writable/session writable/uploads writable/debugbar \
+    && chmod -R 777 writable \
+    && chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
