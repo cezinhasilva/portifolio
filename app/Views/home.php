@@ -566,9 +566,21 @@
                       name: '', 
                       email: '', 
                       message: '',
+                      loading: false,
                       submitForm() {
                           if (this.name && this.email) {
-                              this.sent = true;
+                              this.loading = true;
+                              fetch('/api/contact', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({ name: this.name, email: this.email, message: this.message })
+                              }).then(() => {
+                                  this.loading = false;
+                                  this.sent = true;
+                              }).catch(() => {
+                                  this.loading = false;
+                                  alert('Erro ao enviar, tente novamente.');
+                              });
                           }
                       }
                   }" 
