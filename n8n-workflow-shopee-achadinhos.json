@@ -1,0 +1,144 @@
+{
+  "name": "Shopee Achadinhos - IA Gemini & Vitrine cezinhasilva.com",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "achadinho-shopee",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Receber Oferta Shopee",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ],
+      "webhookId": "achadinho-shopee"
+    },
+    {
+      "parameters": {
+        "model": "models/gemini-2.5-flash",
+        "prompt": "=Você é um especialista em e-commerce, afiliados Shopee e copywriting viral para YouTube Shorts e TikTok.\nAnalise as informações do produto de Casa Inteligente / Utilidades / Cozinha abaixo:\n\nDados brutos:\n- Título original: {{ $json.body.title || 'Produto Shopee' }}\n- Preço original: {{ $json.body.price_original || '' }}\n- Preço promoção: {{ $json.body.price_promo || '' }}\n- Descrição/Notas: {{ $json.body.raw_description || '' }}\n- Link de Afiliado: {{ $json.body.affiliate_url }}\n\nGere uma resposta EXCLUSIVAMENTE em formato JSON puro (sem markdown ao redor, sem crases ```json) com a seguinte estrutura:\n{\n  \"title\": \"Título limpo, direto e comercial (máx 65 caracteres)\",\n  \"description\": \"Resumo de 2 linhas focando no maior benefício e dor que resolve\",\n  \"category\": \"Escolha EXATAMENTE uma das opções: Casa Inteligente, Casa & Cozinha, Organização ou Utilidades\",\n  \"price_original\": {{ $json.body.price_original || 0 }},\n  \"price_promo\": {{ $json.body.price_promo || 0 }},\n  \"discount_percent\": {{ $json.body.discount_percent || 0 }},\n  \"image_url\": \"{{ $json.body.image_url || '' }}\",\n  \"affiliate_url\": \"{{ $json.body.affiliate_url }}\",\n  \"shopee_item_id\": \"{{ $json.body.shopee_item_id || '' }}\",\n  \"roteiro_shorts\": {\n    \"gancho_0_a_3s\": \"Frase impactante para prender a atenção\",\n    \"desenvolvimento_4_a_20s\": \"Como o produto resolve um problema real\",\n    \"chamada_acao_21_a_30s\": \"Link oficial com cupom no comentário fixado e em cezinhasilva.com/achadinhos\"\n  },\n  \"post_redes_whatsapp\": \"Mensagem pronta com emojis, preço e link para grupos de ofertas\"\n}"
+      },
+      "id": "gemini-curadoria",
+      "name": "Gemini - Copywriting & Roteiro Shorts",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrai o JSON gerado pelo Gemini e prepara o payload para o site\nconst rawOutput = $input.first().json.text || $input.first().json.output || JSON.stringify($input.first().json);\nlet cleanJson = {};\ntry {\n  const sanitized = rawOutput.replace(/```json/g, '').replace(/```/g, '').trim();\n  cleanJson = JSON.parse(sanitized);\n} catch (e) {\n  cleanJson = {\n    title: $node[\"Webhook Receber Oferta Shopee\"].json.body.title || 'Achadinho Shopee',\n    description: 'Confira esse super achadinho para sua casa.',\n    category: 'Casa Inteligente',\n    price_original: $node[\"Webhook Receber Oferta Shopee\"].json.body.price_original || null,\n    price_promo: $node[\"Webhook Receber Oferta Shopee\"].json.body.price_promo || 29.90,\n    discount_percent: 40,\n    image_url: $node[\"Webhook Receber Oferta Shopee\"].json.body.image_url || '',\n    affiliate_url: $node[\"Webhook Receber Oferta Shopee\"].json.body.affiliate_url,\n    shopee_item_id: $node[\"Webhook Receber Oferta Shopee\"].json.body.shopee_item_id || null\n  };\n}\n\nreturn [{ json: cleanJson }];"
+      },
+      "id": "formata-payload",
+      "name": "Formatar Payload p/ o Site",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cezinhasilva.com/api/achadinhos/salvar",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "shopee_cezinha_secret_2026"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "salva-no-cezinhasilva",
+      "name": "Publicar na Vitrine cezinhasilva.com",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, message: 'Oferta processada pelo Gemini e cadastrada na vitrine com sucesso!', site_response: $json, roteiro: $('Formatar Payload p/ o Site').first().json.roteiro_shorts }) }}",
+        "options": {}
+      },
+      "id": "resposta-webhook",
+      "name": "Responder Webhook com Roteiro",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1140,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Receber Oferta Shopee": {
+      "main": [
+        [
+          {
+            "node": "Gemini - Copywriting & Roteiro Shorts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini - Copywriting & Roteiro Shorts": {
+      "main": [
+        [
+          {
+            "node": "Formatar Payload p/ o Site",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Payload p/ o Site": {
+      "main": [
+        [
+          {
+            "node": "Publicar na Vitrine cezinhasilva.com",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publicar na Vitrine cezinhasilva.com": {
+      "main": [
+        [
+          {
+            "node": "Responder Webhook com Roteiro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

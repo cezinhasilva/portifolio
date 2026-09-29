@@ -6,8 +6,11 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
-$routes->post('api/contact', 'Contact::send');
 
+// Rotas do Ecossistema de Achadinhos da Shopee
+$routes->get('achadinhos', 'Achadinhos::index');
+$routes->get('achadinhos/go/(:num)', 'Achadinhos::go/$1');
+$routes->post('api/achadinhos/salvar', 'Achadinhos::apiSalvar');
 
 // Rotas do Dashboard protegidas pelo Shield
 $routes->group('dashboard', ['filter' => 'group:user'], function ($routes) {

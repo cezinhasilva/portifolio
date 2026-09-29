@@ -37,6 +37,36 @@ class Contact extends ResourceController
         // Se falhar o envio (ex: servidor SMTP não configurado localmente), ignoramos e damos sucesso para o form funcionar
         $emailService->send();
 
+        // --- INÍCIO DA INTEGRAÇÃO N8N ---
+        $payload = [
+            'nome' => $name,
+            'email' => $email,
+            'mensagem' => $message,
+            'origem' => 'Site Cezinha Silva',
+            'data' => date('Y-m-d H:i:s')
+        ];
+
+        $webhookUrl = 'https://n8n.cezinhasilva.com/webhook-test/receber-contato';
+        
+        $ch = curl_init($webhookUrl);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5); // Timeout rápido para não travar o site
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Ignora verificação de SSL localmente
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        
+        $response = curl_exec($ch);
+        
+        // Se houver erro no cURL, podemos logar para debugar
+        if(curl_errno($ch)){
+            log_message('error', 'Erro no cURL n8n: ' . curl_error($ch));
+        }
+        
+        curl_close($ch);
+        // --- FIM DA INTEGRAÇÃO N8N ---
+
         return $this->respondCreated(['status' => 'success', 'message' => 'E-mail enviado com sucesso!']);
     }
 }
