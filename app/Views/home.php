@@ -560,49 +560,77 @@
                 </p>
             </div>
 
-            <!-- Interactive Form with Alpine.js feedback -->
+            <!-- Interactive Form with Alpine.js feedback & Honeypot Protection -->
             <form x-data="{ 
                       sent: false, 
                       name: '', 
+                      phone: '',
                       email: '', 
                       message: '',
+                      b_hp: '',
                       loading: false,
+                      errorMessage: '',
                       submitForm() {
-                          if (this.name && this.email) {
+                          this.errorMessage = '';
+                          if (this.name && this.email && this.message) {
                               this.loading = true;
                               fetch('/api/contact', {
                                   method: 'POST',
                                   headers: { 'Content-Type': 'application/json' },
-                                  body: JSON.stringify({ name: this.name, email: this.email, message: this.message })
-                              }).then(() => {
+                                  body: JSON.stringify({ 
+                                      name: this.name, 
+                                      phone: this.phone,
+                                      email: this.email, 
+                                      message: this.message,
+                                      b_hp: this.b_hp
+                                  })
+                              })
+                              .then(async (res) => {
                                   this.loading = false;
-                                  this.sent = true;
-                              }).catch(() => {
+                                  const data = await res.json().catch(() => ({}));
+                                  if (res.ok) {
+                                      this.sent = true;
+                                  } else {
+                                      this.errorMessage = data.message || 'Ocorreu um erro ao enviar. Tente novamente mais tarde.';
+                                  }
+                              })
+                              .catch(() => {
                                   this.loading = false;
-                                  alert('Erro ao enviar, tente novamente.');
+                                  this.errorMessage = 'Não foi possível conectar ao servidor. Tente novamente.';
                               });
                           }
                       }
                   }" 
                   @submit.prevent="submitForm()" 
                   class="space-y-6">
+
+                <!-- Campo Honeypot Oculto (Anti-Spam / Bots) -->
+                <div style="display:none !important; position:absolute; left:-9999px;" aria-hidden="true">
+                    <input type="text" x-model="b_hp" tabindex="-1" autocomplete="off" name="website_trap_field">
+                </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="block text-xs font-mono uppercase tracking-wider text-[#8B949E]">Seu Nome</label>
-                        <input type="text" x-model="name" required placeholder="Ex: Lucas Ferreira" 
+                        <label class="block text-xs font-mono uppercase tracking-wider text-[#8B949E]">Seu Nome *</label>
+                        <input type="text" x-model="name" required placeholder="Ex: Lucas Ferreira" maxlength="100"
                                class="w-full px-4 py-3 rounded-lg bg-obsidian/80 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-neon transition-colors text-sm">
                     </div>
                     <div class="space-y-2">
-                        <label class="block text-xs font-mono uppercase tracking-wider text-[#8B949E]">E-mail Corporativo</label>
-                        <input type="email" x-model="email" required placeholder="lucas@suaempresa.com.br" 
+                        <label class="block text-xs font-mono uppercase tracking-wider text-[#8B949E]">WhatsApp / Telefone *</label>
+                        <input type="tel" x-model="phone" required placeholder="(11) 99999-9999" maxlength="25"
                                class="w-full px-4 py-3 rounded-lg bg-obsidian/80 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-neon transition-colors text-sm">
                     </div>
                 </div>
 
                 <div class="space-y-2">
-                    <label class="block text-xs font-mono uppercase tracking-wider text-[#8B949E]">O que você precisa desenvolver ou migrar?</label>
-                    <textarea x-model="message" rows="4" required placeholder="Descreva brevemente o projeto, portal, automação ou dúvida..." 
+                    <label class="block text-xs font-mono uppercase tracking-wider text-[#8B949E]">E-mail Corporativo *</label>
+                    <input type="email" x-model="email" required placeholder="lucas@suaempresa.com.br" maxlength="150"
+                           class="w-full px-4 py-3 rounded-lg bg-obsidian/80 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-neon transition-colors text-sm">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-mono uppercase tracking-wider text-[#8B949E]">O que você precisa desenvolver ou migrar? *</label>
+                    <textarea x-model="message" rows="4" required placeholder="Descreva brevemente o projeto, portal, automação ou dúvida..." maxlength="3000"
                               class="w-full px-4 py-3 rounded-lg bg-obsidian/80 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-neon transition-colors text-sm"></textarea>
                 </div>
 
@@ -610,10 +638,14 @@
                     <span class="text-xs font-mono text-[#8B949E]">
                         Tempo de resposta: <strong class="text-neon">&lt; 4 horas</strong>
                     </span>
-                    <button type="submit" class="btn-magnetic-primary w-full sm:w-auto justify-center" data-magnetic data-magnetic-strength="0.3">
-                        <span>Enviar Mensagem</span>
+                    <button type="submit" :disabled="loading" class="btn-magnetic-primary w-full sm:w-auto justify-center disabled:opacity-50" data-magnetic data-magnetic-strength="0.3">
+                        <span x-text="loading ? 'Enviando...' : 'Enviar Mensagem'"></span>
                         <i data-lucide="send" class="w-4 h-4"></i>
                     </button>
+                </div>
+
+                <!-- Error Feedback Message -->
+                <div x-show="errorMessage" x-transition class="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-center text-red-400 text-sm font-mono mt-4" style="display: none;" x-text="errorMessage">
                 </div>
 
                 <!-- Success Feedback Message -->
