@@ -1,0 +1,46 @@
+steps:
+  # 1. Build da imagem Docker com a tag do commit e latest
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/magnusmedia/cezinhasilva:$COMMIT_SHA'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/magnusmedia/cezinhasilva:latest'
+      - '.'
+
+  # 2. Push da imagem com a tag do commit para o Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/magnusmedia/cezinhasilva:$COMMIT_SHA'
+
+  # 3. Push da tag latest
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/magnusmedia/cezinhasilva:latest'
+
+  # 4. Deploy no Cloud Run (Zero Downtime)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'cezinhasilva-app'
+      - '--image'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/magnusmedia/cezinhasilva:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--project'
+      - '$PROJECT_ID'
+      - '--allow-unauthenticated'
+      - '--port'
+      - '80'
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/magnusmedia/cezinhasilva:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/magnusmedia/cezinhasilva:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
