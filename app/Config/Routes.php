@@ -12,6 +12,9 @@ $routes->get('achadinhos', 'Achadinhos::index');
 $routes->get('achadinhos/go/(:num)', 'Achadinhos::go/$1');
 $routes->post('api/achadinhos/salvar', 'Achadinhos::apiSalvar');
 
+// Rota de Contato e Leads
+$routes->post('api/contact', 'Contact::send');
+
 // Rotas do Dashboard protegidas pelo Shield
 $routes->group('dashboard', ['filter' => 'group:user'], function ($routes) {
     $routes->get('/', 'Dashboard::index');
