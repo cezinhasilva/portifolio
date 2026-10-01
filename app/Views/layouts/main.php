@@ -77,10 +77,12 @@
                 <a href="/#arquitetura" class="hover:text-white transition-colors" data-magnetic data-magnetic-strength="0.3">Stack & Cloud</a>
                 <a href="/#solucoes" class="hover:text-white transition-colors" data-magnetic data-magnetic-strength="0.3">Serviços</a>
                 <a href="/#cockpit" class="hover:text-white transition-colors" data-magnetic data-magnetic-strength="0.3">Cockpit</a>
+                <?php /* Link de achadinhos temporariamente oculto para produção
                 <a href="/achadinhos" class="text-neon hover:text-white transition-colors flex items-center gap-1 font-semibold" data-magnetic data-magnetic-strength="0.3">
                     <i data-lucide="flame" class="w-4 h-4 text-neon"></i>
                     <span>Achadinhos</span>
                 </a>
+                */ ?>
             </nav>
 
             <!-- Status Badge & CTA -->
