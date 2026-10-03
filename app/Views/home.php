@@ -560,7 +560,7 @@
                 </p>
             </div>
 
-            <!-- Interactive Form with Alpine.js feedback & Honeypot Protection -->
+            <!-- Interactive Form with Alpine.js feedback & 5-Layer Anti-Spam Protection -->
             <form x-data="{ 
                       sent: false, 
                       name: '', 
@@ -568,7 +568,9 @@
                       email: '', 
                       message: '',
                       b_hp: '',
+                      form_time: <?= time() ?>,
                       loading: false,
+                      successMessage: '✓ Mensagem recebida! Entraremos em contato imediatamente para o seu briefing técnico.',
                       errorMessage: '',
                       submitForm() {
                           this.errorMessage = '';
@@ -582,13 +584,17 @@
                                       phone: this.phone,
                                       email: this.email, 
                                       message: this.message,
-                                      b_hp: this.b_hp
+                                      b_hp: this.b_hp,
+                                      form_time: this.form_time
                                   })
                               })
                               .then(async (res) => {
                                   this.loading = false;
                                   const data = await res.json().catch(() => ({}));
                                   if (res.ok) {
+                                      if (data.message) {
+                                          this.successMessage = data.message;
+                                      }
                                       this.sent = true;
                                   } else {
                                       this.errorMessage = data.message || 'Ocorreu um erro ao enviar. Tente novamente mais tarde.';
@@ -604,10 +610,13 @@
                   @submit.prevent="submitForm()" 
                   class="space-y-6">
 
-                <!-- Campo Honeypot Oculto (Anti-Spam / Bots) -->
-                <div style="display:none !important; position:absolute; left:-9999px;" aria-hidden="true">
-                    <input type="text" x-model="b_hp" tabindex="-1" autocomplete="off" name="website_trap_field">
+                <!-- Camada 1: Campo Honeypot Oculto (Anti-Spam / Bots) -->
+                <div style="display:none !important; position:absolute; left:-9999px; opacity:0; pointer-events:none;" aria-hidden="true">
+                    <input type="text" x-model="b_hp" tabindex="-1" autocomplete="off" name="b_hp">
                 </div>
+                
+                <!-- Camada 2: Time-Gate (Velocidade Humana de Preenchimento) -->
+                <input type="hidden" name="form_time" :value="form_time">
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div class="space-y-2">
@@ -625,7 +634,7 @@
                 <div class="space-y-2">
                     <label class="block text-xs font-mono uppercase tracking-wider text-[#8B949E]">E-mail Corporativo *</label>
                     <input type="email" x-model="email" required placeholder="lucas@suaempresa.com.br" maxlength="150"
-                           class="w-full px-4 py-3 rounded-lg bg-obsidian/80 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-neon transition-colors text-sm">
+                            class="w-full px-4 py-3 rounded-lg bg-obsidian/80 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-neon transition-colors text-sm">
                 </div>
 
                 <div class="space-y-2">
@@ -649,8 +658,7 @@
                 </div>
 
                 <!-- Success Feedback Message -->
-                <div x-show="sent" x-transition class="p-4 rounded-lg bg-neon/10 border border-neon/30 text-center text-neon text-sm font-mono mt-4" style="display: none;">
-                    ✓ Mensagem recebida! Entraremos em contato imediatamente para o seu briefing técnico.
+                <div x-show="sent" x-transition class="p-4 rounded-lg bg-neon/10 border border-neon/30 text-center text-neon text-sm font-mono mt-4" style="display: none;" x-text="successMessage">
                 </div>
             </form>
 
