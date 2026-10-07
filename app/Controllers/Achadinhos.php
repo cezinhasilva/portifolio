@@ -39,18 +39,18 @@ class Achadinhos extends BaseController
                           ->orderBy('created_at', 'DESC')
                           ->findAll(24);
 
-        // Categorias fixas com ícones e contadores
+        // Categorias fáceis, amigáveis e acolhedoras para pessoas leigas e idosos
         $categorias = [
-            'todos'             => ['nome' => '🔥 Todos os Achados', 'icone' => 'local_fire_department'],
-            'Casa Inteligente'  => ['nome' => '💡 Casa Inteligente', 'icone' => 'smart_toy'],
-            'Casa & Cozinha'    => ['nome' => '🍳 Cozinha & Praticidade', 'icone' => 'restaurant'],
-            'Organização'       => ['nome' => '📦 Organização & Limpeza', 'icone' => 'cleaning_services'],
-            'Utilidades'        => ['nome' => '⚡ Utilidades do Dia', 'icone' => 'bolt'],
+            'todos'                 => ['nome' => 'Todos os Produtos', 'icone' => 'view_cozy'],
+            'Cozinha Sem Esforço'   => ['nome' => 'Cozinha Sem Esforço', 'icone' => 'soup_kitchen'],
+            'Conforto & Segurança'  => ['nome' => 'Conforto & Segurança', 'icone' => 'lightbulb'],
+            'Limpeza Prática'       => ['nome' => 'Limpeza Prática', 'icone' => 'cleaning_services'],
+            'Organização & Cuidado' => ['nome' => 'Organização & Cuidado', 'icone' => 'inventory_2'],
         ];
 
         $data = [
-            'titulo'               => 'Achadinhos Shopee | Casa Inteligente & Praticidade',
-            'meta_descricao'       => 'Os melhores achados e ofertas secretas da Shopee para transformar sua casa com praticidade, automação e preço baixo.',
+            'titulo'               => 'Facilidades para Casa & Dia a Dia | Achados do Cezinha',
+            'meta_descricao'       => 'Produtos simples, práticos e fáceis de usar para facilitar a sua vida em casa. Compras seguras e direto na loja oficial.',
             'produtos'             => $produtos,
             'categorias'           => $categorias,
             'categoriaAtual'       => $categoriaSelecionada ?: 'todos',

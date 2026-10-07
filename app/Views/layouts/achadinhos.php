@@ -4,136 +4,179 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title><?= esc($titulo ?? 'Achadinhos Shopee | Casa Inteligente & Praticidade') ?></title>
-    <meta name="description" content="<?= esc($meta_descricao ?? 'Os melhores achados e ofertas secretas da Shopee para transformar sua casa.') ?>" />
+    <title><?= esc($titulo ?? 'Facilidades para Casa & Dia a Dia | Achados do Cezinha') ?></title>
+    <meta name="description" content="<?= esc($meta_descricao ?? 'Produtos simples, práticos e fáceis de usar para facilitar a sua vida em casa. Compras seguras e direto na loja oficial.') ?>" />
+    
+    <!-- TAILWIND CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&amp;family=Patrick+Hand&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/papercss@1.9.2/dist/paper.min.css">
+    
+    <!-- FONTES ULTRA LEGÍVEIS (Inter + Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- MATERIAL SYMBOLS -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#ee4d2d", /* Laranja Shopee */
-                        "secondary": "#25D366", /* Verde WhatsApp */
-                        "background-light": "#fbf9f8",
-                        "background-dark": "#1a1615",
+                        "primary": "#ee4d2d", /* Laranja Oficial Shopee */
+                        "primary-hover": "#d03b1d",
+                        "whatsapp": "#25D366", /* Verde WhatsApp */
+                        "whatsapp-hover": "#1ebd58",
+                        "surface": "#ffffff",
+                        "surface-soft": "#f8fafc",
+                        "text-main": "#0f172a", /* Preto de alto contraste */
+                        "text-muted": "#475569",
                     },
                     fontFamily: {
-                        "display": ["Space Grotesk", "sans-serif"],
-                        "handwritten": ["Patrick Hand", "cursive"],
-                        "sketchy": ["Gochi Hand", "cursive"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
+                        "sans": ["'Plus Jakarta Sans'", "'Inter'", "system-ui", "-apple-system", "sans-serif"],
                     },
                 },
             },
         }
     </script>
-    <style type="text/tailwindcss">
-        .sketch-border {
-            border: 2px solid #181311;
-            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+
+    <style>
+        :root {
+            --font-scale: 1;
         }
-        .sketch-border-sm {
-            border: 2px solid #181311;
-            border-radius: 4px 12px 6px 14px/10px 4px 12px 5px;
+        body {
+            font-size: calc(1rem * var(--font-scale));
+            line-height: 1.6;
         }
-        .paper-texture {
-            background-color: #fbf9f8;
-            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-        .dark .paper-texture {
-            background-color: #1a1615;
-            background-image: radial-gradient(#2d2825 1px, transparent 1px);
-        }
-        .dark .sketch-border, .dark .sketch-border-sm {
-            border-color: #443c38;
+        /* Foco acessível com borda destacada para teclado e leitor de tela */
+        a:focus-visible, button:focus-visible, input:focus-visible {
+            outline: 3px solid #ee4d2d !important;
+            outline-offset: 2px !important;
         }
     </style>
 </head>
 
-<body class="paper-texture font-display text-[#181311] dark:text-white transition-colors duration-300">
-    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
-        <div class="layout-container flex h-full grow flex-col">
+<body class="bg-slate-50 dark:bg-slate-950 font-sans text-text-main dark:text-slate-100 min-h-screen flex flex-col transition-all duration-200">
+    
+    <!-- BARRA SUPERIOR DE ACESSIBILIDADE & CONFIANÇA -->
+    <div class="bg-slate-900 text-white text-xs sm:text-sm py-2.5 px-4 border-b border-slate-800">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
             
-            <!-- CABEÇALHO DEDICADO DE ACHADINHOS -->
-            <div class="px-4 md:px-20 lg:px-40 flex justify-center py-5">
-                <div class="layout-content-container flex flex-col max-w-[1140px] flex-1">
-                    <header
-                        class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b-2 border-solid border-[#181311] dark:border-stone-700 px-6 py-4 sketch-border-sm bg-white/90 dark:bg-stone-900/90 shadow-sm">
-                        
-                        <!-- LOGO ACHADOS DO CEZINHA -->
-                        <div class="flex items-center gap-3">
-                            <a href="<?= site_url('achadinhos') ?>" class="flex items-center gap-3 group">
-                                <div class="size-11 rounded-xl bg-primary text-white flex items-center justify-center sketch-border-sm group-hover:scale-105 transition-transform shadow-sm">
-                                    <span class="material-symbols-outlined text-2xl">shopping_bag</span>
-                                </div>
-                                <div>
-                                    <div class="flex items-center gap-2">
-                                        <h1 class="text-xl font-black italic tracking-tight text-sketchy leading-none text-primary">
-                                            Achados do Cezinha
-                                        </h1>
-                                        <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider">Shopee</span>
-                                    </div>
-                                    <p class="text-[11px] font-bold text-stone-500 dark:text-stone-400">Curadoria de Casa Inteligente & Praticidade</p>
-                                </div>
-                            </a>
-                        </div>
-
-                        <!-- NAVEGAÇÃO E AÇÕES -->
-                        <div class="flex items-center gap-4 sm:gap-6">
-                            <!-- LINK DISCRETO PARA O PORTFÓLIO DE DEV -->
-                            <a class="text-xs font-bold text-stone-600 dark:text-stone-300 hover:text-primary flex items-center gap-1 transition-colors"
-                                href="<?= site_url('/') ?>" title="Ir para o site profissional de Desenvolvedor">
-                                <span class="material-symbols-outlined text-base">code</span>
-                                <span>Portfólio Dev</span>
-                            </a>
-
-                            <!-- BOTÃO GRUPO VIP WHATSAPP -->
-                            <a href="https://chat.whatsapp.com" target="_blank" rel="noopener"
-                                class="flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-black tracking-wide px-4 py-2.5 rounded-lg sketch-border-sm hover:scale-105 transition-all shadow-md">
-                                <span class="material-symbols-outlined text-sm">notifications_active</span>
-                                <span>Grupo VIP de Cupons</span>
-                            </a>
-                        </div>
-                    </header>
-                </div>
+            <!-- AVISO DE SEGURANÇA -->
+            <div class="flex items-center gap-2 font-medium">
+                <span class="material-symbols-outlined text-emerald-400 text-lg">verified_user</span>
+                <span>Site 100% Seguro • Links Diretos para a Loja Oficial Shopee</span>
             </div>
 
-            <!-- CONTEÚDO DA VITRINE -->
-            <main class="flex-grow">
-                <?= $this->renderSection('content') ?>
-            </main>
-
-            <!-- RODAPÉ DEDICADO DE AFILIADOS -->
-            <footer class="px-4 md:px-20 lg:px-40 py-10 mt-12 border-t border-stone-300 dark:border-stone-800 flex flex-col items-center justify-center gap-4 text-center">
-                <div class="flex items-center gap-2 text-stone-700 dark:text-stone-300 text-xs font-bold">
-                    <span class="material-symbols-outlined text-primary text-base">verified_user</span>
-                    <span>Programa Oficial de Afiliados Shopee Brasil</span>
-                </div>
-                <p class="text-xs text-stone-500 dark:text-stone-400 max-w-xl leading-relaxed">
-                    Divulgação de Transparência: Este site contém links de afiliados. Ao comprar através deles, recebemos uma pequena comissão oficial da Shopee sem nenhum custo extra para você. Isso apoia a continuidade da curadoria e reviews no canal!
-                </p>
-                <div class="text-xs font-bold text-stone-400 mt-2">
-                    <a href="<?= site_url('/') ?>" class="underline hover:text-primary">Voltar para cezinhasilva.com</a> • © <?= date('Y') ?> Achados do Cezinha
-                </div>
-            </footer>
+            <!-- CONTROLES DE ACESSIBILIDADE (AUMENTAR LETRA) -->
+            <div class="flex items-center gap-2">
+                <span class="text-slate-300 font-semibold hidden sm:inline">Tamanho da Letra:</span>
+                <button type="button" onclick="changeFontSize(-0.1)" title="Diminuir tamanho da letra"
+                        class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-xs font-bold border border-slate-700 transition-colors">
+                    A -
+                </button>
+                <button type="button" onclick="resetFontSize()" title="Tamanho normal da letra"
+                        class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-xs font-bold border border-slate-700 transition-colors">
+                    Padrão
+                </button>
+                <button type="button" onclick="changeFontSize(0.1)" title="Aumentar tamanho da letra"
+                        class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded text-xs font-bold border border-slate-700 transition-colors">
+                    A +
+                </button>
+            </div>
 
         </div>
     </div>
-</body>
 
+    <!-- CABEÇALHO PRINCIPAL LIMPO E CLARO -->
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-xs">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            
+            <!-- LOGO / NOME DO SITE -->
+            <a href="<?= site_url('achadinhos') ?>" class="flex items-center gap-3.5 group">
+                <div class="size-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                    <span class="material-symbols-outlined text-3xl">shopping_bag</span>
+                </div>
+                <div>
+                    <span class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white block leading-tight">
+                        Achados do Cezinha
+                    </span>
+                    <span class="text-xs sm:text-sm font-semibold text-primary block">
+                        Facilidades e Praticidade para Sua Casa
+                    </span>
+                </div>
+            </a>
+
+            <!-- AJUDA HUMANIZADA WHATSAPP NO TOPO -->
+            <div class="flex items-center gap-3">
+                <a href="https://wa.me/5511999999999?text=Ol%C3%A1%2C%20gostei%20de%20um%20produto%20na%20sua%20vitrine%20e%20gostaria%20de%20ajuda%20para%20comprar!" 
+                   target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-lg text-sm shadow-sm transition-all hover:scale-102">
+                    <span class="material-symbols-outlined text-xl">support_agent</span>
+                    <span>Ajuda no WhatsApp</span>
+                </a>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-grow">
+        <?= $this->renderSection('content') ?>
+    </main>
+
+    <!-- RODAPÉ EXPLICATIVO E ACOLHEDOR -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-16 py-10 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-start justify-between gap-8">
+            
+            <div class="max-w-md">
+                <div class="flex items-center gap-2 font-bold text-base text-slate-900 dark:text-white mb-2">
+                    <span class="material-symbols-outlined text-primary">help</span>
+                    <span>Como funciona comprar por aqui?</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Você escolhe o produto que gostou, clica no botão e será direcionado com total segurança para o aplicativo ou site oficial da <strong>Shopee</strong>. O pagamento é feito direto na Shopee (por Pix ou Boleto) e você recebe tudo na sua casa com código de rastreamento.
+                </p>
+            </div>
+
+            <div class="max-w-xs">
+                <div class="flex items-center gap-2 font-bold text-base text-slate-900 dark:text-white mb-2">
+                    <span class="material-symbols-outlined text-emerald-600">lock</span>
+                    <span>Compra 100% Protegida</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Nós selecionamos apenas vendedores confiáveis e produtos bem avaliados para garantir que você faça compras sem dor de cabeça.
+                </p>
+            </div>
+
+            <div class="text-xs text-slate-500 flex flex-col gap-1">
+                <span>© <?= date('Y') ?> Achados do Cezinha • Curadoria de Produtos Úteis</span>
+                <span>Links de afiliado oficial Shopee.</span>
+                <a href="<?= site_url('/') ?>" class="text-primary hover:underline font-semibold mt-2 inline-block">
+                    Conhecer o site pessoal de Cezinha Silva →
+                </a>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- SCRIPT DE ZOOM ACESSÍVEL (A+ / A-) -->
+    <script>
+        let currentScale = parseFloat(localStorage.getItem('cezinha_font_scale')) || 1.0;
+        document.documentElement.style.setProperty('--font-scale', currentScale);
+
+        function changeFontSize(delta) {
+            currentScale = Math.min(Math.max(currentScale + delta, 0.85), 1.35);
+            document.documentElement.style.setProperty('--font-scale', currentScale);
+            localStorage.setItem('cezinha_font_scale', currentScale);
+        }
+
+        function resetFontSize() {
+            currentScale = 1.0;
+            document.documentElement.style.setProperty('--font-scale', currentScale);
+            localStorage.setItem('cezinha_font_scale', currentScale);
+        }
+    </script>
+</body>
 </html>
