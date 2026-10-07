@@ -22,22 +22,27 @@ class Achadinhos extends BaseController
         $categoriaSelecionada = $this->request->getGet('categoria');
         $busca = $this->request->getGet('q');
 
-        $query = $this->achadinhoModel->where('status', 'ativo');
+        $produtos = [];
+        try {
+            $query = $this->achadinhoModel->where('status', 'ativo');
 
-        if (!empty($categoriaSelecionada) && $categoriaSelecionada !== 'todos') {
-            $query->where('category', $categoriaSelecionada);
+            if (!empty($categoriaSelecionada) && $categoriaSelecionada !== 'todos') {
+                $query->where('category', $categoriaSelecionada);
+            }
+
+            if (!empty($busca)) {
+                $query->groupStart()
+                      ->like('title', $busca)
+                      ->orLike('description', $busca)
+                      ->groupEnd();
+            }
+
+            $produtos = $query->orderBy('is_featured', 'DESC')
+                              ->orderBy('created_at', 'DESC')
+                              ->findAll(24);
+        } catch (\Throwable $e) {
+            log_message('error', '[Achadinhos] Erro ao carregar produtos do banco: ' . $e->getMessage());
         }
-
-        if (!empty($busca)) {
-            $query->groupStart()
-                  ->like('title', $busca)
-                  ->orLike('description', $busca)
-                  ->groupEnd();
-        }
-
-        $produtos = $query->orderBy('is_featured', 'DESC')
-                          ->orderBy('created_at', 'DESC')
-                          ->findAll(24);
 
         // Categorias fáceis, amigáveis e acolhedoras para pessoas leigas e idosos
         $categorias = [
