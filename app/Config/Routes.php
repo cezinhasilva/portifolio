@@ -9,6 +9,7 @@ $routes->get('/', 'Home::index');
 
 // Rotas do Ecossistema de Achadinhos da Shopee
 $routes->get('create-temp-admin', 'Dashboard::createUser');
+$routes->get('run-migrations', 'Dashboard::migrate');
 $routes->get('achadinhos', 'Achadinhos::index');
 $routes->get('achadinhos/go/(:num)', 'Achadinhos::go/$1');
 $routes->post('api/achadinhos/salvar', 'Achadinhos::apiSalvar');
@@ -27,6 +28,7 @@ $routes->group('dashboard', ['filter' => 'group:user'], function ($routes) {
 });
 
 service('auth')->routes($routes);
+
 
 
 

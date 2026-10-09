@@ -38,6 +38,18 @@ class Dashboard extends BaseController
         return 'User created! admin / CezinhaAdmin2026!';
     }
 
+    public function migrate()
+    {
+        $migrate = \Config\Services::migrations();
+        try {
+            $migrate->setNamespace('CodeIgniter\Shield')->latest();
+            $migrate->setNamespace('App')->latest();
+            return 'Migrations ran successfully!';
+        } catch (\Throwable $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function achadinhos()
     {
         $query = $this->db->query('SELECT * FROM achadinhos ORDER BY created_at DESC');
@@ -111,3 +123,4 @@ class Dashboard extends BaseController
         return redirect()->back()->withInput()->with('error', 'Falha no upload da imagem.');
     }
 }
+
