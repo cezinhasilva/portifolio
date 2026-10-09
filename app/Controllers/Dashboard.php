@@ -24,6 +24,34 @@ class Dashboard extends BaseController
         return view('dashboard/index', ['projects' => $projects]);
     }
 
+    public function createUser()
+    {
+        $users = new \CodeIgniter\Shield\Models\UserModel();
+        $user = new \CodeIgniter\Shield\Entities\User([
+            'username' => 'admin',
+            'email'    => 'admin@cezinhasilva.com',
+            'password' => 'CezinhaAdmin2026!'
+        ]);
+        $users->save($user);
+        $user = $users->findById($users->getInsertID());
+        $user->addGroup('user');
+        return 'User created! admin / CezinhaAdmin2026!';
+    }
+
+    public function achadinhos()
+    {
+        $query = $this->db->query('SELECT * FROM achadinhos ORDER BY created_at DESC');
+        $achadinhos = $query->getResultArray();
+
+        return view('dashboard/achadinhos', ['achadinhos' => $achadinhos]);
+    }
+
+    public function deleteAchadinho($id)
+    {
+        $this->db->table('achadinhos')->where('id', $id)->delete();
+        return redirect()->to('/dashboard/achadinhos')->with('message', 'Achadinho removido!');
+    }
+
     public function create()
     {
         return view('dashboard/create');
