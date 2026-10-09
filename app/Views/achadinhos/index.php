@@ -13,14 +13,14 @@
                 </span>
                 
                 <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white leading-tight mb-3">
-                    Coisas PrÃ¡ticas para Facilitar o Seu Dia a Dia em Casa
+                    Coisas Práticas para Facilitar o Seu Dia a Dia em Casa
                 </h1>
                 
                 <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-medium leading-relaxed max-w-2xl mb-5">
-                    Aqui vocÃª encontra utilidades simples, que nÃ£o dÃ£o trabalho para usar e tÃªm preÃ§o baixo. Escolha o que precisa e compre com tranquilidade na loja oficial.
+                    Aqui você encontra utilidades simples, que não dão trabalho para usar e têm preço baixo. Escolha o que precisa e compre com tranquilidade na loja oficial.
                 </p>
 
-                <!-- CARD DE CONFIANÃ‡A & WHATSAPP DIRETO -->
+                <!-- CARD DE CONFIANÇA & WHATSAPP DIRETO -->
                 <div class="bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/80 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
                         <div class="size-11 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
@@ -28,10 +28,10 @@
                         </div>
                         <div>
                             <span class="font-bold text-slate-900 dark:text-white text-sm sm:text-base block">
-                                Tem dÃºvida de como fazer o pedido pela internet?
+                                Tem dúvida de como fazer o pedido pela internet?
                             </span>
                             <span class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 block">
-                                NÃ£o se preocupe! Te ajudamos passo a passo no WhatsApp sem custo nenhum.
+                                Não se preocupe! Te ajudamos passo a passo no WhatsApp sem custo nenhum.
                             </span>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <!-- SELEÃ‡ÃƒO DE CATEGORIAS SIMPLES & BUSCA -->
+    <!-- SELEÇÃO DE CATEGORIAS SIMPLES & BUSCA -->
     <div class="flex flex-col gap-5 mb-8">
         
         <!-- BARRA DE BUSCA GRANDE E CLARA -->
@@ -59,7 +59,7 @@
             <?php endif; ?>
             <div class="relative flex items-center">
                 <input type="text" name="q" value="<?= esc($busca) ?>" 
-                       placeholder="Procurar um produto... (Ex: triturador, lÃ¢mpada, vassoura, organizador)"
+                       placeholder="Procurar um produto... (Ex: triturador, lâmpada, vassoura, organizador)"
                        class="w-full bg-white dark:bg-slate-900 text-base sm:text-lg px-5 py-4 pl-12 rounded-xl border-2 border-slate-300 dark:border-slate-700 focus:border-primary dark:focus:border-primary shadow-xs placeholder-slate-400">
                 <span class="material-symbols-outlined text-slate-400 absolute left-4 text-2xl">search</span>
                 
@@ -76,10 +76,10 @@
             </div>
         </form>
 
-        <!-- BOTÃ•ES GRANDES DE CATEGORIAS -->
+        <!-- BOTÕES GRANDES DE CATEGORIAS -->
         <div>
             <span class="text-xs sm:text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2">
-                Escolha o que vocÃª procura:
+                Escolha o que você procura:
             </span>
             <div class="flex flex-wrap items-center gap-2.5">
                 <?php foreach ($categorias as $chave => $cat): ?>
@@ -95,7 +95,7 @@
 
     </div>
 
-    <!-- LISTA DE PRODUTOS (CARDS LIMPOS E ESPAÃ‡OSOS) -->
+    <!-- LISTA DE PRODUTOS (CARDS LIMPOS E ESPAÇOSOS) -->
     <?php if (!empty($produtos)): ?>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <?php foreach ($produtos as $p): ?>
@@ -122,7 +122,7 @@
                         <?php endif; ?>
                     </div>
 
-                    <!-- INFORMAÃ‡Ã•ES DO PRODUTO -->
+                    <!-- INFORMAÇÕES DO PRODUTO -->
                     <div class="p-5 flex flex-col flex-grow justify-between gap-4">
                         
                         <div>
@@ -131,12 +131,12 @@
                                 <?= esc($p['category']) ?>
                             </span>
 
-                            <!-- TÃTULO -->
+                            <!-- TÍTULO -->
                             <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-snug line-clamp-2" title="<?= esc($p['title']) ?>">
                                 <?= esc($p['title']) ?>
                             </h2>
 
-                            <!-- EXPLICAÃ‡ÃƒO SIMPLES -->
+                            <!-- EXPLICAÇÃO SIMPLES -->
                             <?php if (!empty($p['description'])): ?>
                                 <p class="text-sm text-slate-600 dark:text-slate-300 mt-2 line-clamp-2 leading-relaxed">
                                     <?= esc($p['description']) ?>
@@ -144,7 +144,7 @@
                             <?php endif; ?>
                         </div>
 
-                        <!-- PREÃ‡O E BOTÃƒO DE COMPRA -->
+                        <!-- PREÇO E BOTÃO DE COMPRA -->
                         <div class="pt-3 border-t border-slate-100 dark:border-slate-800">
                             
                             <div class="mb-3">
@@ -161,18 +161,18 @@
                                 </div>
                             </div>
 
-                            <!-- BOTÃƒO DE AÃ‡ÃƒO GRANDE E ACESSÃVEL -->
+                            <!-- BOTÃO DE AÇÃO GRANDE E ACESSÍVEL -->
                             <a href="<?= site_url('achadinhos/go/' . $p['id']) ?>" 
                                target="_blank" rel="nofollow noopener"
                                class="w-full min-h-[52px] flex items-center justify-center gap-2 bg-primary hover:bg-primary-hover text-white font-bold text-sm sm:text-base rounded-xl px-4 shadow-sm transition-all hover:scale-101 active:scale-98">
-                                <span>Ver PreÃ§o na Shopee</span>
+                                <span>Ver Preço na Shopee</span>
                                 <span class="material-symbols-outlined text-lg">open_in_new</span>
                             </a>
 
                             <!-- SELO DE TRANQUILIDADE -->
                             <div class="flex items-center justify-center gap-1.5 mt-2.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                                 <span class="material-symbols-outlined text-xs text-emerald-600">verified</span>
-                                <span>Loja Oficial â€¢ Pix ou Boleto</span>
+                                <span>Loja Oficial • Pix ou Boleto</span>
                             </div>
 
                         </div>
@@ -184,7 +184,7 @@
         </div>
 
     <?php else: ?>
-        <!-- QUANDO NÃƒO ENCONTRAR NADA -->
+        <!-- QUANDO NÃO ENCONTRAR NADA -->
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center max-w-lg mx-auto my-12">
             <div class="size-16 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 mx-auto flex items-center justify-center mb-4">
                 <span class="material-symbols-outlined text-3xl">search_off</span>
@@ -193,7 +193,7 @@
                 Nenhum produto encontrado
             </h3>
             <p class="text-sm text-slate-600 dark:text-slate-300 mb-6">
-                NÃ£o localizamos nenhum produto com esse nome. Deseja ver todos os produtos disponÃ­veis para sua casa?
+                Não localizamos nenhum produto com esse nome. Deseja ver todos os produtos disponíveis para sua casa?
             </p>
             <a href="<?= site_url('achadinhos') ?>" 
                class="inline-flex items-center gap-2 bg-primary text-white font-bold px-6 py-3 rounded-xl text-sm">
