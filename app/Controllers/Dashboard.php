@@ -55,7 +55,25 @@ class Dashboard extends BaseController
         $query = $this->db->query('SELECT * FROM achadinhos ORDER BY created_at DESC');
         $achadinhos = $query->getResultArray();
 
-        return view('dashboard/achadinhos', ['achadinhos' => $achadinhos]);
+        // Buscar usuarios cadastrados no CodeIgniter Shield
+        $users = [];
+        try {
+            $users = $this->db->table('users')
+                ->select('users.id, users.username, users.active, users.last_active, users.created_at, auth_identities.secret as email, GROUP_CONCAT(auth_groups_users.group SEPARATOR ", ") as groups')
+                ->join('auth_identities', 'auth_identities.user_id = users.id AND auth_identities.type = "email_password"', 'left')
+                ->join('auth_groups_users', 'auth_groups_users.user_id = users.id', 'left')
+                ->groupBy('users.id')
+                ->orderBy('users.id', 'DESC')
+                ->get()
+                ->getResultArray();
+        } catch (\Throwable $e) {
+            log_message('error', '[Dashboard] Erro ao carregar usuarios: ' . $e->getMessage());
+        }
+
+        return view('dashboard/achadinhos', [
+            'achadinhos' => $achadinhos,
+            'users'      => $users,
+        ]);
     }
 
     public function deleteAchadinho($id)

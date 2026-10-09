@@ -105,7 +105,7 @@
                     <div class="relative w-full aspect-square bg-slate-100 dark:bg-slate-800 overflow-hidden border-b border-slate-200 dark:border-slate-800">
                         <?php if (!empty($p['image_url'])): ?>
                             <img src="<?= esc($p['image_url']) ?>" alt="<?= esc($p['title']) ?>"
-                                 class="w-full h-full object-cover" loading="lazy">
+                                 class="w-full h-full object-cover" loading="lazy" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-100 dark:bg-slate-800\'><span class=\'material-symbols-outlined text-6xl\'>inventory_2</span><span class=\'text-xs font-semibold mt-1\'>Foto Oficial</span></div>';">
                         <?php else: ?>
                             <div class="w-full h-full flex flex-col items-center justify-center text-slate-400">
                                 <span class="material-symbols-outlined text-6xl">inventory_2</span>
