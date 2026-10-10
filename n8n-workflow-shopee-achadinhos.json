@@ -1,97 +1,41 @@
 {
+  "id": "hqZhy6aJ4xlQKHSO",
   "name": "Shopee Achadinhos - IA Gemini & Vitrine cezinhasilva.com",
-  "nodes": [
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "achadinho-shopee",
-        "responseMode": "responseNode",
-        "options": {}
-      },
-      "id": "webhook-trigger",
-      "name": "Webhook Receber Oferta Shopee",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        220,
-        300
-      ],
-      "webhookId": "achadinho-shopee"
-    },
-    {
-      "parameters": {
-        "model": "models/gemini-2.5-flash",
-        "prompt": "=Você é um especialista em e-commerce, afiliados Shopee e copywriting viral para YouTube Shorts e TikTok.\nAnalise as informações do produto de Casa Inteligente / Utilidades / Cozinha abaixo:\n\nDados brutos:\n- Título original: {{ $json.body.title || 'Produto Shopee' }}\n- Preço original: {{ $json.body.price_original || '' }}\n- Preço promoção: {{ $json.body.price_promo || '' }}\n- Descrição/Notas: {{ $json.body.raw_description || '' }}\n- Link de Afiliado: {{ $json.body.affiliate_url }}\n\nGere uma resposta EXCLUSIVAMENTE em formato JSON puro (sem markdown ao redor, sem crases ```json) com a seguinte estrutura:\n{\n  \"title\": \"Título limpo, direto e comercial (máx 65 caracteres)\",\n  \"description\": \"Resumo de 2 linhas focando no maior benefício e dor que resolve\",\n  \"category\": \"Escolha EXATAMENTE uma das opções: Casa Inteligente, Casa & Cozinha, Organização ou Utilidades\",\n  \"price_original\": {{ $json.body.price_original || 0 }},\n  \"price_promo\": {{ $json.body.price_promo || 0 }},\n  \"discount_percent\": {{ $json.body.discount_percent || 0 }},\n  \"image_url\": \"{{ $json.body.image_url || '' }}\",\n  \"affiliate_url\": \"{{ $json.body.affiliate_url }}\",\n  \"shopee_item_id\": \"{{ $json.body.shopee_item_id || '' }}\",\n  \"roteiro_shorts\": {\n    \"gancho_0_a_3s\": \"Frase impactante para prender a atenção\",\n    \"desenvolvimento_4_a_20s\": \"Como o produto resolve um problema real\",\n    \"chamada_acao_21_a_30s\": \"Link oficial com cupom no comentário fixado e em cezinhasilva.com/achadinhos\"\n  },\n  \"post_redes_whatsapp\": \"Mensagem pronta com emojis, preço e link para grupos de ofertas\"\n}"
-      },
-      "id": "gemini-curadoria",
-      "name": "Gemini - Copywriting & Roteiro Shorts",
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.7,
-      "position": [
-        460,
-        300
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "// Extrai o JSON gerado pelo Gemini e prepara o payload para o site\nconst rawOutput = $input.first().json.text || $input.first().json.output || JSON.stringify($input.first().json);\nlet cleanJson = {};\ntry {\n  const sanitized = rawOutput.replace(/```json/g, '').replace(/```/g, '').trim();\n  cleanJson = JSON.parse(sanitized);\n} catch (e) {\n  cleanJson = {\n    title: $node[\"Webhook Receber Oferta Shopee\"].json.body.title || 'Achadinho Shopee',\n    description: 'Confira esse super achadinho para sua casa.',\n    category: 'Casa Inteligente',\n    price_original: $node[\"Webhook Receber Oferta Shopee\"].json.body.price_original || null,\n    price_promo: $node[\"Webhook Receber Oferta Shopee\"].json.body.price_promo || 29.90,\n    discount_percent: 40,\n    image_url: $node[\"Webhook Receber Oferta Shopee\"].json.body.image_url || '',\n    affiliate_url: $node[\"Webhook Receber Oferta Shopee\"].json.body.affiliate_url,\n    shopee_item_id: $node[\"Webhook Receber Oferta Shopee\"].json.body.shopee_item_id || null\n  };\n}\n\nreturn [{ json: cleanJson }];"
-      },
-      "id": "formata-payload",
-      "name": "Formatar Payload p/ o Site",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        700,
-        300
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://cezinhasilva.com/api/achadinhos/salvar",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "X-API-KEY",
-              "value": "shopee_cezinha_secret_2026"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify($json) }}",
-        "options": {}
-      },
-      "id": "salva-no-cezinhasilva",
-      "name": "Publicar na Vitrine cezinhasilva.com",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        920,
-        300
-      ]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ success: true, message: 'Oferta processada pelo Gemini e cadastrada na vitrine com sucesso!', site_response: $json, roteiro: $('Formatar Payload p/ o Site').first().json.roteiro_shorts }) }}",
-        "options": {}
-      },
-      "id": "resposta-webhook",
-      "name": "Responder Webhook com Roteiro",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.1,
-      "position": [
-        1140,
-        300
-      ]
-    }
+  "active": true,
+  "isArchived": false,
+  "versionId": "375a4e38-6d26-4d26-a24d-0e18986cf62f",
+  "activeVersionId": "89f0c06a-7902-41c9-b825-3a2bfe58a85b",
+  "triggerCount": 2,
+  "nodeCount": 11,
+  "createdAt": "2026-10-08T19:59:53.442Z",
+  "updatedAt": "2026-10-10T00:49:57.299Z",
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "tags": [],
+  "parentFolderId": null,
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
   ],
+  "canExecute": true,
   "connections": {
     "Webhook Receber Oferta Shopee": {
       "main": [
@@ -136,9 +80,611 @@
           }
         ]
       ]
+    },
+    "Schedule Trigger (Pull Shopee)": {
+      "main": [
+        [
+          {
+            "node": "Gerar HMAC Shopee API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gerar HMAC Shopee API": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request Shopee API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request Shopee API": {
+      "main": [
+        [
+          {
+            "node": "Extrair Ofertas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extrair Ofertas": {
+      "main": [
+        [
+          {
+            "node": "Mapear p/ Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapear p/ Gemini": {
+      "main": [
+        [
+          {
+            "node": "Gemini - Copywriting & Roteiro Shorts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Gemini - Copywriting & Roteiro Shorts",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "settings": {
-    "executionOrder": "v1"
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "achadinho-shopee",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "0760163d-7cfb-4444-9963-2a50f4d8ff90",
+      "name": "Webhook Receber Oferta Shopee",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        2560,
+        464
+      ],
+      "webhookId": "achadinho-shopee"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Crie um roteiro viral e focado em conversão para o seguinte produto (Achadinho da Shopee):\n\n📦 Nome: {{$json.title}}\n💰 Preço Promocional: R$ {{$json.price_promo}} (Preço original: R$ {{$json.price_original}})\n📉 Desconto: {{$json.discount_percent}}%\n🔥 Vendas já realizadas: {{$json.sales}}\n🔗 Link do Produto: {{$json.affiliate_url}}\n🏷️ Categoria Sugerida: {{$json.suggested_category}}\n\nCategorias oficiais permitidas para a vitrine do site:\n- Cozinha Sem Esforço\n- Limpeza Prática\n- Organização & Casa\n- Conforto & Bem-Estar\n- Eletrônicos & Áudio\n- Utilidades & Ferramentas\n\nRequisitos:\n1. O roteiro deve ter um \"gancho\" inicial (primeiros 3 segundos) muito forte.\n2. Destaque o benefício prático e a dor que o produto resolve no dia a dia.\n3. Mencione o desconto ou o preço se for atrativo.\n4. Termine com uma Chamada para Ação (CTA) clara, convidando a pessoa a clicar no link da bio/comentários.\n5. Classifique o produto escolhendo EXATAMENTE uma das 6 categorias oficiais acima (analise o nome e a real função do item).\n6. Formate a resposta como um JSON válido contendo os seguintes campos:\n- \"hook\": O gancho inicial.\n- \"script\": O texto narrado no vídeo.\n- \"category\": A categoria exata (uma das 6 permitidas).\n- \"visuals\": Sugestão de como deve ser a imagem de fundo ou o vídeo.\n- \"cta\": A chamada para ação final.\n- \"caption\": A legenda para o vídeo (incluindo hashtags).",
+        "options": {
+          "systemMessage": "Você é um especialista em marketing viral para TikTok, Shorts e Reels e curadoria de e-commerce. Seu objetivo é criar roteiros curtos (15 a 30 segundos), chamativos e focados em conversão, além de classificar o produto na categoria oficial correta da vitrine."
+        }
+      },
+      "id": "eb4be3ec-a9bd-4f2a-b51c-1db54948dd82",
+      "name": "Gemini - Copywriting & Roteiro Shorts",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        2800,
+        464
+      ],
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nlet shopeeList = [];\ntry {\n  shopeeList = $('Mapear p/ Gemini').all();\n} catch (e) {\n  shopeeList = [];\n}\n\nlet webhookBody = null;\ntry {\n  webhookBody = $('Webhook Receber Oferta Shopee').first().json.body;\n} catch (e) {\n  webhookBody = null;\n}\n\nconst allowedCategories = [\n  'Cozinha Sem Esforço',\n  'Limpeza Prática',\n  'Organização & Casa',\n  'Conforto & Bem-Estar',\n  'Eletrônicos & Áudio',\n  'Utilidades & Ferramentas'\n];\n\nreturn items.map((item, index) => {\n  const rawOutput = item.json.output || item.json.text || JSON.stringify(item.json);\n  let aiData = {};\n  \n  try {\n    const sanitized = rawOutput.replace(/```json/g, '').replace(/```/g, '').trim();\n    aiData = JSON.parse(sanitized);\n  } catch (e) {\n    aiData = { script: rawOutput };\n  }\n  \n  let productData = {};\n  if (shopeeList && shopeeList.length > 0) {\n    const itemTarget = shopeeList[index] || shopeeList[0];\n    productData = itemTarget.json || {};\n  } else if (webhookBody) {\n    productData = webhookBody;\n  } else {\n    productData = {};\n  }\n  \n  let finalCategory = aiData.category || productData.suggested_category || 'Utilidades & Ferramentas';\n  const found = allowedCategories.find(c => c.toLowerCase() === String(finalCategory).toLowerCase());\n  if (found) {\n    finalCategory = found;\n  } else if (!allowedCategories.includes(finalCategory)) {\n    finalCategory = productData.suggested_category || 'Utilidades & Ferramentas';\n  }\n  \n  return {\n    json: {\n      title: productData.title || 'Achadinho Shopee',\n      description: aiData.script || aiData.hook || 'Roteiro gerado pela IA',\n      category: finalCategory,\n      price_original: productData.price_original || productData.price_promo || 0,\n      price_promo: productData.price_promo || 0,\n      discount_percent: productData.discount_percent || 0,\n      image_url: productData.image_url || '',\n      affiliate_url: productData.affiliate_url || 'https://shopee.com.br',\n      shopee_item_id: String(productData.shopee_item_id || ''),\n      ai_hook: aiData.hook || '',\n      ai_visuals: aiData.visuals || '',\n      ai_cta: aiData.cta || '',\n      ai_caption: aiData.caption || ''\n    }\n  };\n});"
+      },
+      "id": "fd866e8c-5c44-4833-b625-cdecdb55b5b4",
+      "name": "Formatar Payload p/ o Site",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3040,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cezinhasilva.com/api/achadinhos/salvar",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-KEY",
+              "value": "shopee_cezinha_secret_2026"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "0fd6d007-6f76-46ef-9410-aaef547ffe1c",
+      "name": "Publicar na Vitrine cezinhasilva.com",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3264,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, message: 'Oferta processada pelo Gemini e cadastrada na vitrine com sucesso!', site_response: $json, roteiro: $('Formatar Payload p/ o Site').first().json.roteiro_shorts }) }}",
+        "options": {}
+      },
+      "id": "d0ffef8c-1799-4e63-a1f1-569ffc8fb907",
+      "name": "Responder Webhook com Roteiro",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3488,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 4
+            }
+          ]
+        }
+      },
+      "id": "d94f83fa-3e8b-4510-a892-26f4a30c0b3c",
+      "name": "Schedule Trigger (Pull Shopee)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1840,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pure JS SHA-256 and HMAC-SHA256 implementation\n// (Since require('crypto') is blocked by default in n8n)\n\nvar CryptoJS = CryptoJS || (function (Math) {\n    var C = {};\n    var C_lib = C.lib = {};\n    var Base = C_lib.Base = (function () {\n        function F() {}\n        return {\n            extend: function (overrides) {\n                F.prototype = this;\n                var subtype = new F();\n                if (overrides) subtype.mixIn(overrides);\n                if (!subtype.hasOwnProperty('init')) {\n                    subtype.init = function () {\n                        subtype.$super.init.apply(this, arguments);\n                    };\n                }\n                subtype.init.prototype = subtype;\n                subtype.$super = this;\n                return subtype;\n            },\n            create: function () {\n                var instance = this.extend();\n                instance.init.apply(instance, arguments);\n                return instance;\n            },\n            init: function () {},\n            mixIn: function (properties) {\n                for (var propertyName in properties) {\n                    if (properties.hasOwnProperty(propertyName)) {\n                        this[propertyName] = properties[propertyName];\n                    }\n                }\n                this.hasOwnProperty = function (propertyName) {\n                    return Object.prototype.hasOwnProperty.call(this, propertyName);\n                };\n            },\n            clone: function () {\n                return this.init.prototype.extend(this);\n            }\n        };\n    }());\n    var WordArray = C_lib.WordArray = Base.extend({\n        init: function (words, sigBytes) {\n            words = this.words = words || [];\n            if (sigBytes != undefined) this.sigBytes = sigBytes;\n            else this.sigBytes = words.length * 4;\n        },\n        toString: function (encoder) {\n            return (encoder || Hex).stringify(this);\n        },\n        concat: function (wordArray) {\n            var thisWords = this.words;\n            var thatWords = wordArray.words;\n            var thisSigBytes = this.sigBytes;\n            var thatSigBytes = wordArray.sigBytes;\n            this.clamp();\n            if (thisSigBytes % 4) {\n                for (var i = 0; i < thatSigBytes; i++) {\n                    var thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;\n                    thisWords[(thisSigBytes + i) >>> 2] |= thatByte << (24 - ((thisSigBytes + i) % 4) * 8);\n                }\n            } else if (thatWords.length > 0xffff) {\n                for (var i = 0; i < thatSigBytes; i += 4) {\n                    thisWords[(thisSigBytes + i) >>> 2] = thatWords[i >>> 2];\n                }\n            } else {\n                thisWords.push.apply(thisWords, thatWords);\n            }\n            this.sigBytes += thatSigBytes;\n            return this;\n        },\n        clamp: function () {\n            var words = this.words;\n            var sigBytes = this.sigBytes;\n            words[sigBytes >>> 2] &= 0xffffffff << (32 - (sigBytes % 4) * 8);\n            words.length = Math.ceil(sigBytes / 4);\n        },\n        clone: function () {\n            var clone = Base.clone.call(this);\n            clone.words = this.words.slice(0);\n            return clone;\n        },\n        random: function (nBytes) {\n            var words = [];\n            for (var i = 0; i < nBytes; i += 4) {\n                words.push((Math.random() * 0x100000000) | 0);\n            }\n            return new WordArray.init(words, nBytes);\n        }\n    });\n    var C_enc = C.enc = {};\n    var Hex = C_enc.Hex = {\n        stringify: function (wordArray) {\n            var words = wordArray.words;\n            var sigBytes = wordArray.sigBytes;\n            var hexChars = [];\n            for (var i = 0; i < sigBytes; i++) {\n                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;\n                hexChars.push((bite >>> 4).toString(16));\n                hexChars.push((bite & 0x0f).toString(16));\n            }\n            return hexChars.join('');\n        },\n        parse: function (hexStr) {\n            var hexStrLength = hexStr.length;\n            var words = [];\n            for (var i = 0; i < hexStrLength; i += 2) {\n                words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);\n            }\n            return new WordArray.init(words, hexStrLength / 2);\n        }\n    };\n    var Latin1 = C_enc.Latin1 = {\n        stringify: function (wordArray) {\n            var words = wordArray.words;\n            var sigBytes = wordArray.sigBytes;\n            var latin1Chars = [];\n            for (var i = 0; i < sigBytes; i++) {\n                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;\n                latin1Chars.push(String.fromCharCode(bite));\n            }\n            return latin1Chars.join('');\n        },\n        parse: function (latin1Str) {\n            var latin1StrLength = latin1Str.length;\n            var words = [];\n            for (var i = 0; i < latin1StrLength; i++) {\n                words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);\n            }\n            return new WordArray.init(words, latin1StrLength);\n        }\n    };\n    var Utf8 = C_enc.Utf8 = {\n        stringify: function (wordArray) {\n            try {\n                return decodeURIComponent(escape(Latin1.stringify(wordArray)));\n            } catch (e) {\n                throw new Error('Malformed UTF-8 data');\n            }\n        },\n        parse: function (utf8Str) {\n            return Latin1.parse(unescape(encodeURIComponent(utf8Str)));\n        }\n    };\n    var BufferedBlockAlgorithm = C_lib.BufferedBlockAlgorithm = Base.extend({\n        reset: function () {\n            this._data = new WordArray.init();\n            this._nDataBytes = 0;\n        },\n        _append: function (data) {\n            if (typeof data == 'string') {\n                data = Utf8.parse(data);\n            }\n            this._data.concat(data);\n            this._nDataBytes += data.sigBytes;\n        },\n        _process: function (doFlush) {\n            var data = this._data;\n            var dataWords = data.words;\n            var dataSigBytes = data.sigBytes;\n            var blockSize = this.blockSize;\n            var blockSizeBytes = blockSize * 4;\n            var nBlocksReady = dataSigBytes / blockSizeBytes;\n            if (doFlush) {\n                nBlocksReady = Math.ceil(nBlocksReady);\n            } else {\n                nBlocksReady = Math.max((nBlocksReady | 0) - this._minBufferSize, 0);\n            }\n            var nWordsReady = nBlocksReady * blockSize;\n            var nBytesReady = Math.min(nWordsReady * 4, dataSigBytes);\n            if (nWordsReady) {\n                for (var offset = 0; offset < nWordsReady; offset += blockSize) {\n                    this._doProcessBlock(dataWords, offset);\n                }\n                var processedWords = dataWords.splice(0, nWordsReady);\n                data.sigBytes -= nBytesReady;\n            }\n            return new WordArray.init(processedWords, nBytesReady);\n        },\n        clone: function () {\n            var clone = Base.clone.call(this);\n            clone._data = this._data.clone();\n            return clone;\n        },\n        _minBufferSize: 0\n    });\n    var Hasher = C_lib.Hasher = BufferedBlockAlgorithm.extend({\n        cfg: Base.extend(),\n        init: function (cfg) {\n            this.cfg = this.cfg.extend(cfg);\n            this.reset();\n        },\n        reset: function () {\n            BufferedBlockAlgorithm.reset.call(this);\n            this._doReset();\n        },\n        update: function (messageUpdate) {\n            this._append(messageUpdate);\n            this._process();\n            return this;\n        },\n        finalize: function (messageUpdate) {\n            if (messageUpdate) {\n                this._append(messageUpdate);\n            }\n            var hash = this._doFinalize();\n            return hash;\n        },\n        blockSize: 512 / 32,\n        _createHelper: function (hasher) {\n            return function (message, cfg) {\n                return new hasher.init(cfg).finalize(message);\n            };\n        },\n        _createHmacHelper: function (hasher) {\n            return function (message, key) {\n                return new C_algo.HMAC.init(hasher, key).finalize(message);\n            };\n        }\n    });\n    var C_algo = C.algo = {};\n    return C;\n}(Math));\n\n(function (Math) {\n    var C = CryptoJS;\n    var C_lib = C.lib;\n    var WordArray = C_lib.WordArray;\n    var Hasher = C_lib.Hasher;\n    var C_algo = C.algo;\n    var H = [];\n    var K = [];\n    (function () {\n        function isPrime(n) {\n            var sqrtN = Math.sqrt(n);\n            for (var factor = 2; factor <= sqrtN; factor++) {\n                if (!(n % factor)) return false;\n            }\n            return true;\n        }\n        function getFractionalBits(n) {\n            return ((n - (n | 0)) * 0x100000000) | 0;\n        }\n        var n = 2;\n        var nPrime = 0;\n        while (nPrime < 64) {\n            if (isPrime(n)) {\n                if (nPrime < 8) {\n                    H[nPrime] = getFractionalBits(Math.pow(n, 1 / 2));\n                }\n                K[nPrime] = getFractionalBits(Math.pow(n, 1 / 3));\n                nPrime++;\n            }\n            n++;\n        }\n    }());\n    var W = [];\n    var SHA256 = C_algo.SHA256 = Hasher.extend({\n        _doReset: function () {\n            this._hash = new WordArray.init(H.slice(0));\n        },\n        _doProcessBlock: function (M, offset) {\n            var H = this._hash.words;\n            var a = H[0];\n            var b = H[1];\n            var c = H[2];\n            var d = H[3];\n            var e = H[4];\n            var f = H[5];\n            var g = H[6];\n            var h = H[7];\n            for (var i = 0; i < 64; i++) {\n                if (i < 16) {\n                    W[i] = M[offset + i] | 0;\n                } else {\n                    var gamma0x = W[i - 15];\n                    var gamma0 = ((gamma0x << 25) | (gamma0x >>> 7)) ^ ((gamma0x << 14) | (gamma0x >>> 18)) ^ (gamma0x >>> 3);\n                    var gamma1x = W[i - 2];\n                    var gamma1 = ((gamma1x << 15) | (gamma1x >>> 17)) ^ ((gamma1x << 13) | (gamma1x >>> 19)) ^ (gamma1x >>> 10);\n                    W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16];\n                }\n                var ch = (e & f) ^ (~e & g);\n                var maj = (a & b) ^ (a & c) ^ (b & c);\n                var sigma0 = ((a << 30) | (a >>> 2)) ^ ((a << 19) | (a >>> 13)) ^ ((a << 10) | (a >>> 22));\n                var sigma1 = ((e << 26) | (e >>> 6)) ^ ((e << 21) | (e >>> 11)) ^ ((e << 7) | (e >>> 25));\n                var t1 = h + sigma1 + ch + K[i] + W[i];\n                var t2 = sigma0 + maj;\n                h = g;\n                g = f;\n                f = e;\n                e = (d + t1) | 0;\n                d = c;\n                c = b;\n                b = a;\n                a = (t1 + t2) | 0;\n            }\n            H[0] = (H[0] + a) | 0;\n            H[1] = (H[1] + b) | 0;\n            H[2] = (H[2] + c) | 0;\n            H[3] = (H[3] + d) | 0;\n            H[4] = (H[4] + e) | 0;\n            H[5] = (H[5] + f) | 0;\n            H[6] = (H[6] + g) | 0;\n            H[7] = (H[7] + h) | 0;\n        },\n        _doFinalize: function () {\n            var data = this._data;\n            var dataWords = data.words;\n            var nBitsTotal = this._nDataBytes * 8;\n            var nBitsLeft = data.sigBytes * 8;\n            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);\n            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);\n            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;\n            data.sigBytes = dataWords.length * 4;\n            this._process();\n            return this._hash;\n        },\n        clone: function () {\n            var clone = Hasher.clone.call(this);\n            clone._hash = this._hash.clone();\n            return clone;\n        }\n    });\n    C.SHA256 = Hasher._createHelper(SHA256);\n    C.HmacSHA256 = Hasher._createHmacHelper(SHA256);\n}(Math));\n\n(function () {\n    var C = CryptoJS;\n    var C_lib = C.lib;\n    var Base = C_lib.Base;\n    var C_enc = C.enc;\n    var Utf8 = C_enc.Utf8;\n    var C_algo = C.algo;\n    var HMAC = C_algo.HMAC = Base.extend({\n        init: function (hasher, key) {\n            hasher = this._hasher = new hasher.init();\n            if (typeof key == 'string') {\n                key = Utf8.parse(key);\n            }\n            var hasherBlockSize = hasher.blockSize;\n            var hasherBlockSizeBytes = hasherBlockSize * 4;\n            if (key.sigBytes > hasherBlockSizeBytes) {\n                key = hasher.finalize(key);\n            }\n            key.clamp();\n            var oKey = this._oKey = key.clone();\n            var iKey = this._iKey = key.clone();\n            var oKeyWords = oKey.words;\n            var iKeyWords = iKey.words;\n            for (var i = 0; i < hasherBlockSize; i++) {\n                oKeyWords[i] ^= 0x5c5c5c5c;\n                iKeyWords[i] ^= 0x36363636;\n            }\n            oKey.sigBytes = iKey.sigBytes = hasherBlockSizeBytes;\n            this.reset();\n        },\n        reset: function () {\n            var hasher = this._hasher;\n            hasher.reset();\n            hasher.update(this._iKey);\n        },\n        update: function (messageUpdate) {\n            this._hasher.update(messageUpdate);\n            return this;\n        },\n        finalize: function (messageUpdate) {\n            var hasher = this._hasher;\n            var innerHash = hasher.finalize(messageUpdate);\n            hasher.reset();\n            var hmac = hasher.finalize(this._oKey.clone().concat(innerHash));\n            return hmac;\n        }\n    });\n}());\n\nconst appId = \"18316950231\";\nconst secret = \"5ND7Y2BSPYO3XNCB6DE6Y5RPCKJI2OTC\";\nconst timestamp = Math.floor(Date.now() / 1000).toString();\n\n// Pool de categorias e palavras-chave de alta conversão\nconst categoryPool = [\n  {\n    category: \"Cozinha Sem Esforço\",\n    keywords: [\n      \"mini processador alimentos eletrico\",\n      \"spray borrifador azeite dispenser\",\n      \"amola afiador facas profissional\",\n      \"seladora embalagens termica portatil\",\n      \"triturador alho legumes manual\"\n    ]\n  },\n  {\n    category: \"Limpeza Prática\",\n    keywords: [\n      \"mop giratorio esfregao limpeza\",\n      \"escova limpeza eletrica giratoria\",\n      \"mini aspirador po portatil\",\n      \"rodo magico silicone limpeza vidros\",\n      \"esponja magica tira manchas\"\n    ]\n  },\n  {\n    category: \"Organização & Casa\",\n    keywords: [\n      \"organizador gavetas roupas divisor\",\n      \"cabide magico multiuso organizador\",\n      \"suporte adesivo vassoura rodo\",\n      \"sacos a vacuo roupas organizador\",\n      \"dispenser organizador temperos giratorio\"\n    ]\n  },\n  {\n    category: \"Conforto & Bem-Estar\",\n    keywords: [\n      \"luminaria led com sensor movimento\",\n      \"travesseiro ortopedico cervical\",\n      \"umidificador difusor aromatizador\",\n      \"massageador pescoco eletrico portatil\",\n      \"almofada ergonomica assento ortopedica\"\n    ]\n  },\n  {\n    category: \"Eletrônicos & Áudio\",\n    keywords: [\n      \"fone de ouvido bluetooth sem fio\",\n      \"relogio smartwatch inteligente\",\n      \"suporte celular veicular articulado\",\n      \"carregador por inducao sem fio\",\n      \"caixa de som bluetooth portatil\"\n    ]\n  },\n  {\n    category: \"Utilidades & Ferramentas\",\n    keywords: [\n      \"fita dupla face silicone ultra forte\",\n      \"kit ferramentas reparo domestico\",\n      \"lanterna led tatica recarregavel\",\n      \"trena medidor digital\",\n      \"chave catraca multiuso com pontas\"\n    ]\n  }\n];\n\nconst now = Date.now();\n// Rotaciona a categoria a cada 4 horas determinístico\nconst cycle4h = Math.floor(now / (1000 * 60 * 60 * 4));\nconst selectedCategoryObj = categoryPool[cycle4h % categoryPool.length];\n\n// Rotaciona a palavra-chave dentro da categoria a cada ciclo de 1 hora\nconst kwIndex = Math.floor(now / (1000 * 60 * 60)) % selectedCategoryObj.keywords.length;\nconst selectedCategory = selectedCategoryObj.category;\nconst selectedKeyword = selectedCategoryObj.keywords[kwIndex];\n\nconst payloadObj = {\n  query: `query { productOfferV2(keyword: \"${selectedKeyword}\", listType: 1, limit: 5) { nodes { itemId productName priceMin priceMax priceDiscountRate offerLink imageUrl sales } } }`,\n  variables: {}\n};\nconst payloadStr = JSON.stringify(payloadObj);\n\nconst baseString = appId + timestamp + payloadStr + secret;\n\n// Shopee requires SHA256\nconst signature = CryptoJS.SHA256(baseString).toString(CryptoJS.enc.Hex);\n\nconst authHeader = \"SHA256 Credential=\" + appId + \",Timestamp=\" + timestamp + \",Signature=\" + signature;\n\nreturn [{\n  json: {\n    appId,\n    timestamp,\n    signature,\n    authHeader,\n    payloadStr,\n    selectedCategory,\n    selectedKeyword\n  }\n}];"
+      },
+      "id": "2b6b9124-7d29-48b6-8f67-c06f059c20b6",
+      "name": "Gerar HMAC Shopee API",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2064,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open-api.affiliate.shopee.com.br/graphql",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "={{ $json.authHeader }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.payloadStr }}",
+        "options": {}
+      },
+      "id": "11513da8-286e-4f77-a525-a74c42df00d3",
+      "name": "HTTP Request Shopee API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2288,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data.productOfferV2.nodes",
+        "options": {}
+      },
+      "id": "222f02e2-3d88-45db-913c-2fa68d3fab68",
+      "name": "Extrair Ofertas",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3,
+      "position": [
+        2512,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "let targetCategory = 'Utilidades & Ferramentas';\ntry {\n  targetCategory = $('Gerar HMAC Shopee API').first().json.selectedCategory || targetCategory;\n} catch (e) {\n  targetCategory = 'Utilidades & Ferramentas';\n}\n\nreturn $input.all().map(item => {\n  const node = item.json;\n  return {\n    json: {\n      title: node.productName,\n      price_original: node.priceMax || node.priceMin,\n      price_promo: node.priceMin,\n      discount_percent: node.priceDiscountRate,\n      affiliate_url: node.offerLink,\n      image_url: node.imageUrl,\n      shopee_item_id: node.itemId,\n      sales: node.sales,\n      suggested_category: targetCategory\n    }\n  };\n});"
+      },
+      "id": "58191a6a-c9ff-4e8a-a74e-a0f1d8672de9",
+      "name": "Mapear p/ Gemini",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2704,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "id": "255e8539-dc58-4089-b1a3-bed32642da1d",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        2784,
+        656
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "DTCqBWHlYEaTkt58",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "nodeGroups": [],
+  "activeVersion": {
+    "sameAsDraft": false,
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "achadinho-shopee",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "id": "0760163d-7cfb-4444-9963-2a50f4d8ff90",
+        "name": "Webhook Receber Oferta Shopee",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          2560,
+          464
+        ],
+        "webhookId": "achadinho-shopee"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Crie um roteiro viral e focado em conversão para o seguinte produto (Achadinho da Shopee):\n\n📦 Nome: {{$json.title}}\n💰 Preço Promocional: R$ {{$json.price_promo}} (Preço original: R$ {{$json.price_original}})\n📉 Desconto: {{$json.discount_percent}}%\n🔥 Vendas já realizadas: {{$json.sales}}\n🔗 Link do Produto: {{$json.affiliate_url}}\n\nRequisitos:\n1. O roteiro deve ter um \"gancho\" inicial (primeiros 3 segundos) muito forte.\n2. Destaque o benefício ou a dor que o produto resolve.\n3. Mencione o desconto ou o preço se for muito atrativo.\n4. Termine com uma Chamada para Ação (CTA) clara, mandando a pessoa clicar no link na bio/comentários.\n5. Formate a resposta como um JSON válido contendo os seguintes campos:\n- \"hook\": O gancho inicial.\n- \"script\": O texto narrado no vídeo.\n- \"visuals\": Sugestão de como deve ser a imagem de fundo ou o vídeo.\n- \"cta\": A chamada para ação final.\n- \"caption\": A legenda para o vídeo (incluindo hashtags).",
+          "options": {
+            "systemMessage": "Você é um especialista em marketing viral para TikTok, Shorts e Reels. Seu objetivo é criar roteiros curtos (15 a 30 segundos), chamativos e focados em conversão, que apresentem o produto (\"Achadinho da Shopee\") e convençam o usuário a clicar no link da bio para comprar."
+          }
+        },
+        "id": "eb4be3ec-a9bd-4f2a-b51c-1db54948dd82",
+        "name": "Gemini - Copywriting & Roteiro Shorts",
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.7,
+        "position": [
+          2800,
+          464
+        ],
+        "retryOnFail": true
+      },
+      {
+        "parameters": {
+          "jsCode": "const items = $input.all();\n\nlet shopeeList = [];\ntry {\n  shopeeList = $('Mapear p/ Gemini').all();\n} catch (e) {\n  shopeeList = [];\n}\n\nlet webhookBody = null;\ntry {\n  webhookBody = $('Webhook Receber Oferta Shopee').first().json.body;\n} catch (e) {\n  webhookBody = null;\n}\n\nreturn items.map((item, index) => {\n  const rawOutput = item.json.output || item.json.text || JSON.stringify(item.json);\n  let aiData = {};\n  \n  try {\n    const sanitized = rawOutput.replace(/```json/g, '').replace(/```/g, '').trim();\n    aiData = JSON.parse(sanitized);\n  } catch (e) {\n    aiData = { script: rawOutput };\n  }\n  \n  let productData = {};\n  if (shopeeList && shopeeList.length > 0) {\n    const itemTarget = shopeeList[index] || shopeeList[0];\n    productData = itemTarget.json || {};\n  } else if (webhookBody) {\n    productData = webhookBody;\n  } else {\n    productData = {};\n  }\n  \n  return {\n    json: {\n      title: productData.title || 'Achadinho Shopee',\n      description: aiData.script || aiData.hook || 'Roteiro gerado pela IA',\n      category: 'Achadinhos',\n      price_original: productData.price_original || productData.price_promo || 0,\n      price_promo: productData.price_promo || 0,\n      discount_percent: productData.discount_percent || 0,\n      image_url: productData.image_url || '',\n      affiliate_url: productData.affiliate_url || 'https://shopee.com.br',\n      shopee_item_id: String(productData.shopee_item_id || ''),\n      ai_hook: aiData.hook || '',\n      ai_visuals: aiData.visuals || '',\n      ai_cta: aiData.cta || '',\n      ai_caption: aiData.caption || ''\n    }\n  };\n});"
+        },
+        "id": "fd866e8c-5c44-4833-b625-cdecdb55b5b4",
+        "name": "Formatar Payload p/ o Site",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          3040,
+          464
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://cezinhasilva.com/api/achadinhos/salvar",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-API-KEY",
+                "value": "shopee_cezinha_secret_2026"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={{ JSON.stringify($json) }}",
+          "options": {}
+        },
+        "id": "0fd6d007-6f76-46ef-9410-aaef547ffe1c",
+        "name": "Publicar na Vitrine cezinhasilva.com",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          3264,
+          464
+        ]
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ JSON.stringify({ success: true, message: 'Oferta processada pelo Gemini e cadastrada na vitrine com sucesso!', site_response: $json, roteiro: $('Formatar Payload p/ o Site').first().json.roteiro_shorts }) }}",
+          "options": {}
+        },
+        "id": "d0ffef8c-1799-4e63-a1f1-569ffc8fb907",
+        "name": "Responder Webhook com Roteiro",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          3488,
+          464
+        ]
+      },
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "hours",
+                "hoursInterval": 4
+              }
+            ]
+          }
+        },
+        "id": "d94f83fa-3e8b-4510-a892-26f4a30c0b3c",
+        "name": "Schedule Trigger (Pull Shopee)",
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          1840,
+          256
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "// Pure JS SHA-256 and HMAC-SHA256 implementation\n// (Since require('crypto') is blocked by default in n8n)\n\nvar CryptoJS = CryptoJS || (function (Math) {\n    var C = {};\n    var C_lib = C.lib = {};\n    var Base = C_lib.Base = (function () {\n        function F() {}\n        return {\n            extend: function (overrides) {\n                F.prototype = this;\n                var subtype = new F();\n                if (overrides) subtype.mixIn(overrides);\n                if (!subtype.hasOwnProperty('init')) {\n                    subtype.init = function () {\n                        subtype.$super.init.apply(this, arguments);\n                    };\n                }\n                subtype.init.prototype = subtype;\n                subtype.$super = this;\n                return subtype;\n            },\n            create: function () {\n                var instance = this.extend();\n                instance.init.apply(instance, arguments);\n                return instance;\n            },\n            init: function () {},\n            mixIn: function (properties) {\n                for (var propertyName in properties) {\n                    if (properties.hasOwnProperty(propertyName)) {\n                        this[propertyName] = properties[propertyName];\n                    }\n                }\n                this.hasOwnProperty = function (propertyName) {\n                    return Object.prototype.hasOwnProperty.call(this, propertyName);\n                };\n            },\n            clone: function () {\n                return this.init.prototype.extend(this);\n            }\n        };\n    }());\n    var WordArray = C_lib.WordArray = Base.extend({\n        init: function (words, sigBytes) {\n            words = this.words = words || [];\n            if (sigBytes != undefined) this.sigBytes = sigBytes;\n            else this.sigBytes = words.length * 4;\n        },\n        toString: function (encoder) {\n            return (encoder || Hex).stringify(this);\n        },\n        concat: function (wordArray) {\n            var thisWords = this.words;\n            var thatWords = wordArray.words;\n            var thisSigBytes = this.sigBytes;\n            var thatSigBytes = wordArray.sigBytes;\n            this.clamp();\n            if (thisSigBytes % 4) {\n                for (var i = 0; i < thatSigBytes; i++) {\n                    var thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;\n                    thisWords[(thisSigBytes + i) >>> 2] |= thatByte << (24 - ((thisSigBytes + i) % 4) * 8);\n                }\n            } else if (thatWords.length > 0xffff) {\n                for (var i = 0; i < thatSigBytes; i += 4) {\n                    thisWords[(thisSigBytes + i) >>> 2] = thatWords[i >>> 2];\n                }\n            } else {\n                thisWords.push.apply(thisWords, thatWords);\n            }\n            this.sigBytes += thatSigBytes;\n            return this;\n        },\n        clamp: function () {\n            var words = this.words;\n            var sigBytes = this.sigBytes;\n            words[sigBytes >>> 2] &= 0xffffffff << (32 - (sigBytes % 4) * 8);\n            words.length = Math.ceil(sigBytes / 4);\n        },\n        clone: function () {\n            var clone = Base.clone.call(this);\n            clone.words = this.words.slice(0);\n            return clone;\n        },\n        random: function (nBytes) {\n            var words = [];\n            for (var i = 0; i < nBytes; i += 4) {\n                words.push((Math.random() * 0x100000000) | 0);\n            }\n            return new WordArray.init(words, nBytes);\n        }\n    });\n    var C_enc = C.enc = {};\n    var Hex = C_enc.Hex = {\n        stringify: function (wordArray) {\n            var words = wordArray.words;\n            var sigBytes = wordArray.sigBytes;\n            var hexChars = [];\n            for (var i = 0; i < sigBytes; i++) {\n                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;\n                hexChars.push((bite >>> 4).toString(16));\n                hexChars.push((bite & 0x0f).toString(16));\n            }\n            return hexChars.join('');\n        },\n        parse: function (hexStr) {\n            var hexStrLength = hexStr.length;\n            var words = [];\n            for (var i = 0; i < hexStrLength; i += 2) {\n                words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);\n            }\n            return new WordArray.init(words, hexStrLength / 2);\n        }\n    };\n    var Latin1 = C_enc.Latin1 = {\n        stringify: function (wordArray) {\n            var words = wordArray.words;\n            var sigBytes = wordArray.sigBytes;\n            var latin1Chars = [];\n            for (var i = 0; i < sigBytes; i++) {\n                var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;\n                latin1Chars.push(String.fromCharCode(bite));\n            }\n            return latin1Chars.join('');\n        },\n        parse: function (latin1Str) {\n            var latin1StrLength = latin1Str.length;\n            var words = [];\n            for (var i = 0; i < latin1StrLength; i++) {\n                words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);\n            }\n            return new WordArray.init(words, latin1StrLength);\n        }\n    };\n    var Utf8 = C_enc.Utf8 = {\n        stringify: function (wordArray) {\n            try {\n                return decodeURIComponent(escape(Latin1.stringify(wordArray)));\n            } catch (e) {\n                throw new Error('Malformed UTF-8 data');\n            }\n        },\n        parse: function (utf8Str) {\n            return Latin1.parse(unescape(encodeURIComponent(utf8Str)));\n        }\n    };\n    var BufferedBlockAlgorithm = C_lib.BufferedBlockAlgorithm = Base.extend({\n        reset: function () {\n            this._data = new WordArray.init();\n            this._nDataBytes = 0;\n        },\n        _append: function (data) {\n            if (typeof data == 'string') {\n                data = Utf8.parse(data);\n            }\n            this._data.concat(data);\n            this._nDataBytes += data.sigBytes;\n        },\n        _process: function (doFlush) {\n            var data = this._data;\n            var dataWords = data.words;\n            var dataSigBytes = data.sigBytes;\n            var blockSize = this.blockSize;\n            var blockSizeBytes = blockSize * 4;\n            var nBlocksReady = dataSigBytes / blockSizeBytes;\n            if (doFlush) {\n                nBlocksReady = Math.ceil(nBlocksReady);\n            } else {\n                nBlocksReady = Math.max((nBlocksReady | 0) - this._minBufferSize, 0);\n            }\n            var nWordsReady = nBlocksReady * blockSize;\n            var nBytesReady = Math.min(nWordsReady * 4, dataSigBytes);\n            if (nWordsReady) {\n                for (var offset = 0; offset < nWordsReady; offset += blockSize) {\n                    this._doProcessBlock(dataWords, offset);\n                }\n                var processedWords = dataWords.splice(0, nWordsReady);\n                data.sigBytes -= nBytesReady;\n            }\n            return new WordArray.init(processedWords, nBytesReady);\n        },\n        clone: function () {\n            var clone = Base.clone.call(this);\n            clone._data = this._data.clone();\n            return clone;\n        },\n        _minBufferSize: 0\n    });\n    var Hasher = C_lib.Hasher = BufferedBlockAlgorithm.extend({\n        cfg: Base.extend(),\n        init: function (cfg) {\n            this.cfg = this.cfg.extend(cfg);\n            this.reset();\n        },\n        reset: function () {\n            BufferedBlockAlgorithm.reset.call(this);\n            this._doReset();\n        },\n        update: function (messageUpdate) {\n            this._append(messageUpdate);\n            this._process();\n            return this;\n        },\n        finalize: function (messageUpdate) {\n            if (messageUpdate) {\n                this._append(messageUpdate);\n            }\n            var hash = this._doFinalize();\n            return hash;\n        },\n        blockSize: 512 / 32,\n        _createHelper: function (hasher) {\n            return function (message, cfg) {\n                return new hasher.init(cfg).finalize(message);\n            };\n        },\n        _createHmacHelper: function (hasher) {\n            return function (message, key) {\n                return new C_algo.HMAC.init(hasher, key).finalize(message);\n            };\n        }\n    });\n    var C_algo = C.algo = {};\n    return C;\n}(Math));\n\n(function (Math) {\n    var C = CryptoJS;\n    var C_lib = C.lib;\n    var WordArray = C_lib.WordArray;\n    var Hasher = C_lib.Hasher;\n    var C_algo = C.algo;\n    var H = [];\n    var K = [];\n    (function () {\n        function isPrime(n) {\n            var sqrtN = Math.sqrt(n);\n            for (var factor = 2; factor <= sqrtN; factor++) {\n                if (!(n % factor)) return false;\n            }\n            return true;\n        }\n        function getFractionalBits(n) {\n            return ((n - (n | 0)) * 0x100000000) | 0;\n        }\n        var n = 2;\n        var nPrime = 0;\n        while (nPrime < 64) {\n            if (isPrime(n)) {\n                if (nPrime < 8) {\n                    H[nPrime] = getFractionalBits(Math.pow(n, 1 / 2));\n                }\n                K[nPrime] = getFractionalBits(Math.pow(n, 1 / 3));\n                nPrime++;\n            }\n            n++;\n        }\n    }());\n    var W = [];\n    var SHA256 = C_algo.SHA256 = Hasher.extend({\n        _doReset: function () {\n            this._hash = new WordArray.init(H.slice(0));\n        },\n        _doProcessBlock: function (M, offset) {\n            var H = this._hash.words;\n            var a = H[0];\n            var b = H[1];\n            var c = H[2];\n            var d = H[3];\n            var e = H[4];\n            var f = H[5];\n            var g = H[6];\n            var h = H[7];\n            for (var i = 0; i < 64; i++) {\n                if (i < 16) {\n                    W[i] = M[offset + i] | 0;\n                } else {\n                    var gamma0x = W[i - 15];\n                    var gamma0 = ((gamma0x << 25) | (gamma0x >>> 7)) ^ ((gamma0x << 14) | (gamma0x >>> 18)) ^ (gamma0x >>> 3);\n                    var gamma1x = W[i - 2];\n                    var gamma1 = ((gamma1x << 15) | (gamma1x >>> 17)) ^ ((gamma1x << 13) | (gamma1x >>> 19)) ^ (gamma1x >>> 10);\n                    W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16];\n                }\n                var ch = (e & f) ^ (~e & g);\n                var maj = (a & b) ^ (a & c) ^ (b & c);\n                var sigma0 = ((a << 30) | (a >>> 2)) ^ ((a << 19) | (a >>> 13)) ^ ((a << 10) | (a >>> 22));\n                var sigma1 = ((e << 26) | (e >>> 6)) ^ ((e << 21) | (e >>> 11)) ^ ((e << 7) | (e >>> 25));\n                var t1 = h + sigma1 + ch + K[i] + W[i];\n                var t2 = sigma0 + maj;\n                h = g;\n                g = f;\n                f = e;\n                e = (d + t1) | 0;\n                d = c;\n                c = b;\n                b = a;\n                a = (t1 + t2) | 0;\n            }\n            H[0] = (H[0] + a) | 0;\n            H[1] = (H[1] + b) | 0;\n            H[2] = (H[2] + c) | 0;\n            H[3] = (H[3] + d) | 0;\n            H[4] = (H[4] + e) | 0;\n            H[5] = (H[5] + f) | 0;\n            H[6] = (H[6] + g) | 0;\n            H[7] = (H[7] + h) | 0;\n        },\n        _doFinalize: function () {\n            var data = this._data;\n            var dataWords = data.words;\n            var nBitsTotal = this._nDataBytes * 8;\n            var nBitsLeft = data.sigBytes * 8;\n            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);\n            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);\n            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;\n            data.sigBytes = dataWords.length * 4;\n            this._process();\n            return this._hash;\n        },\n        clone: function () {\n            var clone = Hasher.clone.call(this);\n            clone._hash = this._hash.clone();\n            return clone;\n        }\n    });\n    C.SHA256 = Hasher._createHelper(SHA256);\n    C.HmacSHA256 = Hasher._createHmacHelper(SHA256);\n}(Math));\n\n(function () {\n    var C = CryptoJS;\n    var C_lib = C.lib;\n    var Base = C_lib.Base;\n    var C_enc = C.enc;\n    var Utf8 = C_enc.Utf8;\n    var C_algo = C.algo;\n    var HMAC = C_algo.HMAC = Base.extend({\n        init: function (hasher, key) {\n            hasher = this._hasher = new hasher.init();\n            if (typeof key == 'string') {\n                key = Utf8.parse(key);\n            }\n            var hasherBlockSize = hasher.blockSize;\n            var hasherBlockSizeBytes = hasherBlockSize * 4;\n            if (key.sigBytes > hasherBlockSizeBytes) {\n                key = hasher.finalize(key);\n            }\n            key.clamp();\n            var oKey = this._oKey = key.clone();\n            var iKey = this._iKey = key.clone();\n            var oKeyWords = oKey.words;\n            var iKeyWords = iKey.words;\n            for (var i = 0; i < hasherBlockSize; i++) {\n                oKeyWords[i] ^= 0x5c5c5c5c;\n                iKeyWords[i] ^= 0x36363636;\n            }\n            oKey.sigBytes = iKey.sigBytes = hasherBlockSizeBytes;\n            this.reset();\n        },\n        reset: function () {\n            var hasher = this._hasher;\n            hasher.reset();\n            hasher.update(this._iKey);\n        },\n        update: function (messageUpdate) {\n            this._hasher.update(messageUpdate);\n            return this;\n        },\n        finalize: function (messageUpdate) {\n            var hasher = this._hasher;\n            var innerHash = hasher.finalize(messageUpdate);\n            hasher.reset();\n            var hmac = hasher.finalize(this._oKey.clone().concat(innerHash));\n            return hmac;\n        }\n    });\n}());\n\nconst appId = \"18316950231\";\nconst secret = \"5ND7Y2BSPYO3XNCB6DE6Y5RPCKJI2OTC\";\nconst timestamp = Math.floor(Date.now() / 1000).toString();\n\n// Resolvendo o 'matchId' ao usar keyword e listType 1.\nconst payloadObj = {\n  query: 'query { productOfferV2(keyword: \"fone bluetooth\", listType: 1, limit: 5) { nodes { itemId productName priceMin priceMax priceDiscountRate offerLink imageUrl sales } } }',\n  variables: {}\n};\nconst payloadStr = JSON.stringify(payloadObj);\n\nconst baseString = appId + timestamp + payloadStr + secret;\n\n// FIX: Shopee requires SHA256, NOT HMAC-SHA256!\nconst signature = CryptoJS.SHA256(baseString).toString(CryptoJS.enc.Hex);\n\nconst authHeader = \"SHA256 Credential=\" + appId + \",Timestamp=\" + timestamp + \",Signature=\" + signature;\n\nreturn [{\n  json: {\n    appId,\n    timestamp,\n    signature,\n    authHeader,\n    payloadStr\n  }\n}];"
+        },
+        "id": "2b6b9124-7d29-48b6-8f67-c06f059c20b6",
+        "name": "Gerar HMAC Shopee API",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2064,
+          256
+        ]
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://open-api.affiliate.shopee.com.br/graphql",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Authorization",
+                "value": "={{ $json.authHeader }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "contentType": "raw",
+          "rawContentType": "application/json",
+          "body": "={{ $json.payloadStr }}",
+          "options": {}
+        },
+        "id": "11513da8-286e-4f77-a525-a74c42df00d3",
+        "name": "HTTP Request Shopee API",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2288,
+          256
+        ]
+      },
+      {
+        "parameters": {
+          "fieldToSplitOut": "data.productOfferV2.nodes",
+          "options": {}
+        },
+        "id": "222f02e2-3d88-45db-913c-2fa68d3fab68",
+        "name": "Extrair Ofertas",
+        "type": "n8n-nodes-base.itemLists",
+        "typeVersion": 3,
+        "position": [
+          2512,
+          256
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "return $input.all().map(item => {\n  const node = item.json;\n  return {\n    json: {\n      title: node.productName,\n      price_original: node.priceMax || node.priceMin,\n      price_promo: node.priceMin,\n      discount_percent: node.priceDiscountRate,\n      affiliate_url: node.offerLink,\n      image_url: node.imageUrl,\n      shopee_item_id: node.itemId,\n      sales: node.sales\n    }\n  };\n});"
+        },
+        "id": "58191a6a-c9ff-4e8a-a74e-a0f1d8672de9",
+        "name": "Mapear p/ Gemini",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          2704,
+          256
+        ]
+      },
+      {
+        "parameters": {
+          "modelName": "models/gemini-3.5-flash-lite",
+          "options": {}
+        },
+        "id": "255e8539-dc58-4089-b1a3-bed32642da1d",
+        "name": "Google Gemini Chat Model",
+        "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+        "typeVersion": 1.1,
+        "position": [
+          2784,
+          656
+        ],
+        "retryOnFail": true,
+        "credentials": {
+          "googlePalmApi": {
+            "id": "DTCqBWHlYEaTkt58",
+            "name": "Google Gemini(PaLM) Api account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook Receber Oferta Shopee": {
+        "main": [
+          [
+            {
+              "node": "Gemini - Copywriting & Roteiro Shorts",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Gemini - Copywriting & Roteiro Shorts": {
+        "main": [
+          [
+            {
+              "node": "Formatar Payload p/ o Site",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Formatar Payload p/ o Site": {
+        "main": [
+          [
+            {
+              "node": "Publicar na Vitrine cezinhasilva.com",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Publicar na Vitrine cezinhasilva.com": {
+        "main": [
+          [
+            {
+              "node": "Responder Webhook com Roteiro",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger (Pull Shopee)": {
+        "main": [
+          [
+            {
+              "node": "Gerar HMAC Shopee API",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Gerar HMAC Shopee API": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request Shopee API",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request Shopee API": {
+        "main": [
+          [
+            {
+              "node": "Extrair Ofertas",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Extrair Ofertas": {
+        "main": [
+          [
+            {
+              "node": "Mapear p/ Gemini",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Mapear p/ Gemini": {
+        "main": [
+          [
+            {
+              "node": "Gemini - Copywriting & Roteiro Shorts",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Gemini Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Gemini - Copywriting & Roteiro Shorts",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": []
+  },
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
   }
 }

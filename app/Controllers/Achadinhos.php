@@ -27,7 +27,15 @@ class Achadinhos extends BaseController
             $query = $this->achadinhoModel->where('status', 'ativo');
 
             if (!empty($categoriaSelecionada) && $categoriaSelecionada !== 'todos') {
-                $query->where('category', $categoriaSelecionada);
+                if ($categoriaSelecionada === 'Organização & Casa') {
+                    $query->whereIn('category', ['Organização & Casa', 'Organização & Cuidado']);
+                } elseif ($categoriaSelecionada === 'Conforto & Bem-Estar') {
+                    $query->whereIn('category', ['Conforto & Bem-Estar', 'Conforto & Segurança']);
+                } elseif ($categoriaSelecionada === 'Eletrônicos & Áudio') {
+                    $query->whereIn('category', ['Eletrônicos & Áudio', 'Achadinhos', 'Eletrônicos & Celular']);
+                } else {
+                    $query->where('category', $categoriaSelecionada);
+                }
             }
 
             if (!empty($busca)) {
@@ -46,11 +54,13 @@ class Achadinhos extends BaseController
 
         // Categorias fáceis, amigáveis e acolhedoras para pessoas leigas e idosos
         $categorias = [
-            'todos'                 => ['nome' => 'Todos os Produtos', 'icone' => 'view_cozy'],
-            'Cozinha Sem Esforço'   => ['nome' => 'Cozinha Sem Esforço', 'icone' => 'soup_kitchen'],
-            'Conforto & Segurança'  => ['nome' => 'Conforto & Segurança', 'icone' => 'lightbulb'],
-            'Limpeza Prática'       => ['nome' => 'Limpeza Prática', 'icone' => 'cleaning_services'],
-            'Organização & Cuidado' => ['nome' => 'Organização & Cuidado', 'icone' => 'inventory_2'],
+            'todos'                    => ['nome' => 'Todos os Produtos', 'icone' => 'view_cozy'],
+            'Cozinha Sem Esforço'      => ['nome' => 'Cozinha Sem Esforço', 'icone' => 'soup_kitchen'],
+            'Limpeza Prática'          => ['nome' => 'Limpeza Prática', 'icone' => 'cleaning_services'],
+            'Organização & Casa'       => ['nome' => 'Organização & Casa', 'icone' => 'inventory_2'],
+            'Conforto & Bem-Estar'     => ['nome' => 'Conforto & Bem-Estar', 'icone' => 'spa'],
+            'Eletrônicos & Áudio'      => ['nome' => 'Eletrônicos & Áudio', 'icone' => 'headphones'],
+            'Utilidades & Ferramentas' => ['nome' => 'Utilidades & Ferramentas', 'icone' => 'handyman'],
         ];
 
         $data = [
