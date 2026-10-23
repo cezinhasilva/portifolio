@@ -47,3 +47,17 @@ Options -Indexes
 # Disable server signature start
 ServerSignature Off
 # Disable server signature end
+
+
+# ----------------------------------------------------------------------
+# Bloqueio de Acesso a Arquivos Sensíveis e Ocultos
+# ----------------------------------------------------------------------
+<FilesMatch "(^\.|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op]|env.*)$)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^(robots\.txt|favicon\.ico|favicon\.svg)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>

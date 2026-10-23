@@ -27,7 +27,10 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 RUN a2enmod rewrite headers
 
 # Configuração do Apache para apontar DocumentRoot para /public
-COPY docker/php/apache.conf /etc/apache2/sites-available/000-default.conf
+COPY docker/php/apache.conf /etc/apache2/sites-available/000-default.conf
+
+# Hardening de Seguranca do PHP
+COPY docker/php/security.ini /usr/local/etc/php/conf.d/security.ini
 
 # Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

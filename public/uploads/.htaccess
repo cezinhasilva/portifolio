@@ -1,0 +1,20 @@
+# ----------------------------------------------------------------------
+# Blindagem do Diretorio de Uploads - Prevencao RCE
+# ----------------------------------------------------------------------
+
+# Desativa motor do PHP em caso de mod_php
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+# Bloqueia qualquer requisicao direta para arquivos de script
+<FilesMatch "(?i)\.(php|phtml|php3|php4|php5|php7|php8|phps|cgi|pl|sh|exe|asp)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Proibe navegacao de diretorio e execucao CGI
+Options -Indexes -ExecCGI
